@@ -1,4 +1,4 @@
-package com.mszalek.weight_tracker;
+package com.routineapps.weight_tracker;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "123595545975",
-    "firebase_url": "https://weight-tracker-e574f.firebaseio.com",
-    "project_id": "weight-tracker-e574f",
-    "storage_bucket": "weight-tracker-e574f.appspot.com"
+    "project_number": "739942079878",
+    "firebase_url": "https://flutter-weight-tracker-38720.firebaseio.com",
+    "project_id": "flutter-weight-tracker-38720",
+    "storage_bucket": "flutter-weight-tracker-38720.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:123595545975:android:94795a974b1f6481",
+        "mobilesdk_app_id": "1:739942079878:android:905a23696d42d62a",
         "android_client_info": {
-          "package_name": "com.mszalek.weight_tracker"
+          "package_name": "com.routineapps.weight_tracker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "123595545975-cv0hdhccs4o3itmi7k70o4d8i61injvi.apps.googleusercontent.com",
+          "client_id": "739942079878-9kaq4qk1qqe1fji59e71ta9p0omkdqp8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.mszalek.weight_tracker",
-            "certificate_hash": "4cfcaae693f041e62c51224b17ff5920ca45db7c"
+            "package_name": "com.routineapps.weight_tracker",
+            "certificate_hash": "9884920a26a0c25c721e37c0e475546773f9fd69"
           }
         },
         {
-          "client_id": "123595545975-jvcpng9krrieeokh79673e448cekctnj.apps.googleusercontent.com",
+          "client_id": "739942079878-v522217v9h8vdle1s8cbm40fl1s0eht0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyALrYc3bKgEoGPX2Ez3jjgejLRqaNXSysY"
+          "current_key": "AIzaSyBLy7PaupLXlWatjBKsQ_ECCruxKAlJvIM"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "123595545975-jvcpng9krrieeokh79673e448cekctnj.apps.googleusercontent.com",
+              "client_id": "739942079878-v522217v9h8vdle1s8cbm40fl1s0eht0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -8,13 +8,13 @@ buildscript {
         // Example existing classpath
         classpath 'com.android.tools.build:gradle:3.0.1'
         // Add the google services classpath
-        classpath 'com.google.gms:google-services:3.1.2'
+        classpath 'com.google.gms:google-services:4.1.0' // google-services plugin
     }
 }
 
 allprojects {
     repositories {
-        google()
+        google() // Google's Maven repository
         jcenter()
     }
 }
