@@ -61,7 +61,7 @@ Future<double> _getSavedWeightNote() async {
     int lastIndex = sharedData.lastIndexOf(new RegExp("[0-9]"));
     if (firstIndex != -1) {
       String number = sharedData.substring(firstIndex, lastIndex + 1);
-      double num = double.parse(number, (error) => null);
+      double num = double.tryParse(number);
       return num;
     }
   }
