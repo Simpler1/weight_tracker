@@ -35,8 +35,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.5"
+        versionCode 1
+        versionName "0.1"
 
         applicationId "com.routineapps.weight_tracker"
     }
@@ -54,6 +54,7 @@ android {
     }
     buildTypes {
         release {
+            // minifyEnabled true
             if (keystorePropertiesFile.exists()) {
                 signingConfig signingConfigs.release
 
@@ -61,20 +62,20 @@ android {
                 signingConfig signingConfigs.debug
             }
         }
-        }
     }
+}
 
 
 
-    flutter {
-        source '../..'
-    }
+flutter {
+    source '../..'
+}
 
-    dependencies {
-        implementation 'com.google.firebase:firebase-core:16.0.1'
-        testImplementation 'junit:junit:4.12'
-        androidTestImplementation 'com.android.support.test:runner:1.0.1'
-        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    }
+dependencies {
+    implementation 'com.google.firebase:firebase-core:16.0.1'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
 
-    apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
