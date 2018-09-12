@@ -13,9 +13,9 @@ class WeightListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double displayWeight =
-    unit == "kg" ? weightEntry.weight : weightEntry.weight * KG_LBS_RATIO;
+        unit == "lbs" ? weightEntry.weight : weightEntry.weight * LB_KG_RATIO;
     double displayDifference =
-    unit == "kg" ? weightDifference : weightDifference * KG_LBS_RATIO;
+        unit == "lbs" ? weightDifference : weightDifference * LB_KG_RATIO;
     return new Padding(
       padding: new EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
       child: new Row(
@@ -48,16 +48,16 @@ class WeightListItem extends StatelessWidget {
                 ),
                 (weightEntry.note == null || weightEntry.note.isEmpty)
                     ? new Container(
-                  height: 0.0,
-                )
+                        height: 0.0,
+                      )
                     : new Padding(
-                  padding: new EdgeInsets.only(left: 4.0),
-                  child: new Icon(
-                    Icons.speaker_notes,
-                    color: Colors.grey[300],
-                    size: 16.0,
-                  ),
-                ),
+                        padding: new EdgeInsets.only(left: 4.0),
+                        child: new Icon(
+                          Icons.speaker_notes,
+                          color: Colors.grey[300],
+                          size: 16.0,
+                        ),
+                      ),
               ],
             ),
           ),

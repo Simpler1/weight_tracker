@@ -26,7 +26,7 @@ void main() {
     //given
     MockCanvas mockCanvas = new MockCanvas();
     Size size = new Size(600.0, 600.0);
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 70.0, null);
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null);
     ChartPainter chartPainter = new ChartPainter([weightEntry], 30, true);
     //when
     chartPainter.paint(mockCanvas, size);
@@ -40,11 +40,11 @@ void main() {
     MockCanvas mockCanvas = new MockCanvas();
     Size size = new Size(600.0, 600.0);
     DateTime now = new DateTime.now();
-    WeightEntry weightEntry1 = new WeightEntry(now, 70.0, null);
+    WeightEntry weightEntry1 = new WeightEntry(now, 160.0, null);
     WeightEntry weightEntry2 =
-        new WeightEntry(now.subtract(const Duration(days: 1)), 70.0, null);
+        new WeightEntry(now.subtract(const Duration(days: 1)), 160.0, null);
     ChartPainter chartPainter =
-    new ChartPainter([weightEntry1, weightEntry2], 30, true);
+        new ChartPainter([weightEntry1, weightEntry2], 30, true);
     //when
     chartPainter.paint(mockCanvas, size);
     //then

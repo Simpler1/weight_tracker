@@ -35,20 +35,18 @@ class StatisticsPage extends StatelessWidget {
         String unit = store.state.unit;
         List<WeightEntry> entries = new List();
         store.state.entries.forEach((entry) {
-          if (unit == "kg") {
+          if (unit == "lbs") {
             entries.add(entry);
           } else {
-            entries.add(entry.copyWith(weight: entry.weight * KG_LBS_RATIO));
+            entries.add(entry.copyWith(weight: entry.weight * LB_KG_RATIO));
           }
         });
         List<WeightEntry> last7daysEntries = entries
-            .where((entry) =>
-            entry.dateTime
+            .where((entry) => entry.dateTime
                 .isAfter(new DateTime.now().subtract(new Duration(days: 7))))
             .toList();
         List<WeightEntry> last30daysEntries = entries
-            .where((entry) =>
-            entry.dateTime
+            .where((entry) => entry.dateTime
                 .isAfter(new DateTime.now().subtract(new Duration(days: 30))))
             .toList();
         return new _StatisticsPageViewModel(
@@ -62,7 +60,7 @@ class StatisticsPage extends StatelessWidget {
           last30daysProgress: last30daysEntries.isEmpty
               ? 0.0
               : (last30daysEntries.first.weight -
-              last30daysEntries.last.weight),
+                  last30daysEntries.last.weight),
           entries: entries,
           unit: unit,
           openAddEntryDialog: () {
@@ -159,11 +157,12 @@ class _StatisticCard extends StatelessWidget {
   final double textSizeFactor;
   final String unit;
 
-  _StatisticCard({this.title,
-    this.value,
-    this.unit,
-    this.processNumberSymbol = false,
-    this.textSizeFactor = 1.0});
+  _StatisticCard(
+      {this.title,
+      this.value,
+      this.unit,
+      this.processNumberSymbol = false,
+      this.textSizeFactor = 1.0});
 
   @override
   Widget build(BuildContext context) {
@@ -179,8 +178,7 @@ class _StatisticCard extends StatelessWidget {
                 new Text(
                   numberSymbol + value.toStringAsFixed(1),
                   textScaleFactor: textSizeFactor,
-                  style: Theme
-                      .of(context)
+                  style: Theme.of(context)
                       .textTheme
                       .display2
                       .copyWith(color: numberColor),

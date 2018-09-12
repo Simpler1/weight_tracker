@@ -6,13 +6,13 @@ void main() {
   test('general filtring list test', () {
     //given
     DateTime now = new DateTime.utc(2017, 1, 1, 8, 0);
-    WeightEntry entry1 = new WeightEntry(now, 70.0, null);
+    WeightEntry entry1 = new WeightEntry(now, 160.0, null);
     WeightEntry entry2 =
-        new WeightEntry(now.subtract(new Duration(days: 6)), 70.0, null);
+        new WeightEntry(now.subtract(new Duration(days: 6)), 160.0, null);
     WeightEntry entry3 =
-        new WeightEntry(now.subtract(new Duration(days: 7)), 70.0, null);
+        new WeightEntry(now.subtract(new Duration(days: 7)), 160.0, null);
     WeightEntry entry4 =
-        new WeightEntry(now.subtract(new Duration(days: 8)), 70.0, null);
+        new WeightEntry(now.subtract(new Duration(days: 8)), 160.0, null);
     int daysToShow = 7;
     List<WeightEntry> entries = [entry1, entry2, entry3, entry4];
     //when
@@ -29,9 +29,9 @@ void main() {
     //given
     int daysToShow = 2;
     DateTime now = new DateTime.utc(2017, 10, 10, 8, 0);
-    WeightEntry firstEntryAfterBorder = new WeightEntry(now, 70.0, null);
+    WeightEntry firstEntryAfterBorder = new WeightEntry(now, 160.0, null);
     WeightEntry lastEntryBeforeBorder =
-        new WeightEntry(now.subtract(new Duration(days: 2)), 90.0, null);
+        new WeightEntry(now.subtract(new Duration(days: 2)), 180.0, null);
     List<WeightEntry> entries = [firstEntryAfterBorder, lastEntryBeforeBorder];
     //when
     List<WeightEntry> newEntries =
@@ -42,6 +42,6 @@ void main() {
     expect(
         newEntries,
         anyElement((WeightEntry entry) =>
-            entry.weight == 80.0 && entry.dateTime.day == now.day - 1));
+            entry.weight == 170.0 && entry.dateTime.day == now.day - 1));
   });
 }

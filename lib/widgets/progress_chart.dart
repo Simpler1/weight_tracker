@@ -75,8 +75,8 @@ class ProgressChartState extends State<ProgressChart> {
                 onScaleStart: (details) => viewModel.snapShotDaysToShow(),
                 onScaleUpdate: (ScaleUpdateDetails scaleDetails) {
                   int newNumberOfDays =
-                  (viewModel.previousDaysToShow / scaleDetails.scale)
-                      .round();
+                      (viewModel.previousDaysToShow / scaleDetails.scale)
+                          .round();
                   if (newNumberOfDays >= 8) {
                     viewModel.changeDaysToShow(newNumberOfDays);
                   }
@@ -106,11 +106,10 @@ class ProgressChartState extends State<ProgressChart> {
                 new DropdownButton<RangeOption>(
                   value: rangeOption,
                   items: rangeOptions
-                      .map((option) =>
-                  new DropdownMenuItem<RangeOption>(
-                    child: new Text(option.text),
-                    value: option,
-                  ))
+                      .map((option) => new DropdownMenuItem<RangeOption>(
+                            child: new Text(option.text),
+                            value: option,
+                          ))
                       .toList(),
                   onChanged: (option) {
                     viewModel.changeDaysToShow(option.days);
@@ -172,13 +171,13 @@ class ChartPainter extends CustomPainter {
   bool shouldRepaint(ChartPainter old) => true;
 
   ///draws actual chart
-  void _drawLines(ui.Canvas canvas, int minLineValue, int maxLineValue,
-      bool isLbs) {
+  void _drawLines(
+      ui.Canvas canvas, int minLineValue, int maxLineValue, bool isLbs) {
     final paint = new Paint()
       ..color = Colors.blue[400]
       ..strokeWidth = 3.0;
     DateTime beginningOfChart =
-    utils.getStartDateOfChart(new DateTime.now(), numberOfDays);
+        utils.getStartDateOfChart(new DateTime.now(), numberOfDays);
     for (int i = 0; i < entries.length - 1; i++) {
       Offset startEntryOffset = _getEntryOffset(
           entries[i], beginningOfChart, minLineValue, maxLineValue, isLbs);
@@ -195,10 +194,9 @@ class ChartPainter extends CustomPainter {
   }
 
   /// Draws horizontal lines and labels informing about weight values attached to those lines
-  void _drawHorizontalLinesAndLabels(Canvas canvas, Size size, int minLineValue,
-      int maxLineValue) {
-    final paint = new Paint()
-      ..color = Colors.grey[300];
+  void _drawHorizontalLinesAndLabels(
+      Canvas canvas, Size size, int minLineValue, int maxLineValue) {
+    final paint = new Paint()..color = Colors.grey[300];
     int lineStep = _calculateHorizontalLineStep(maxLineValue, minLineValue);
     double offsetStep = _calculateHorizontalOffsetStep;
     for (int line = 0; line < NUMBER_OF_HORIZONTAL_LINES; line++) {
@@ -208,8 +206,8 @@ class ChartPainter extends CustomPainter {
     }
   }
 
-  void _drawHorizontalLine(ui.Canvas canvas, double yOffset, ui.Size size,
-      ui.Paint paint) {
+  void _drawHorizontalLine(
+      ui.Canvas canvas, double yOffset, ui.Size size, ui.Paint paint) {
     canvas.drawLine(
       new Offset(leftOffsetStart, 5 + yOffset),
       new Offset(size.width, 5 + yOffset),
@@ -220,7 +218,7 @@ class ChartPainter extends CustomPainter {
   void _drawHorizontalLabel(int maxLineValue, int line, int lineStep,
       ui.Canvas canvas, double yOffset) {
     ui.Paragraph paragraph =
-    _buildParagraphForLeftLabel(maxLineValue, line, lineStep);
+        _buildParagraphForLeftLabel(maxLineValue, line, lineStep);
     canvas.drawParagraph(
       paragraph,
       new Offset(0.0, yOffset),
@@ -243,8 +241,8 @@ class ChartPainter extends CustomPainter {
 
   void _drawBottomLabels(Canvas canvas, Size size) {
     for (int daysFromStart = numberOfDays;
-    daysFromStart > 0;
-    daysFromStart = (daysFromStart - (numberOfDays / 4)).round()) {
+        daysFromStart > 0;
+        daysFromStart = (daysFromStart - (numberOfDays / 4)).round()) {
       double offsetXbyDay = drawingWidth / numberOfDays;
       double offsetX = leftOffsetStart + offsetXbyDay * daysFromStart;
       ui.Paragraph paragraph = _buildParagraphForBottomLabel(daysFromStart);
@@ -268,8 +266,8 @@ class ChartPainter extends CustomPainter {
   }
 
   ///Builds text paragraph for label placed on the left side of a chart (weights)
-  ui.Paragraph _buildParagraphForLeftLabel(int maxLineValue, int line,
-      int lineStep) {
+  ui.Paragraph _buildParagraphForLeftLabel(
+      int maxLineValue, int line, int lineStep) {
     ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
       new ui.ParagraphStyle(
         fontSize: 10.0,
@@ -284,13 +282,13 @@ class ChartPainter extends CustomPainter {
   }
 
   ///Produces minimal and maximal value of horizontal line that will be displayed
-  Tuple2<int, int> _getMinAndMaxValues(List<WeightEntry> entries, bool isLbs) {
+  Tuple2<int, int> _getMinAndMaxValues(List<WeightEntry> entries, bool isKg) {
     double maxWeight = entries.map((entry) => entry.weight).reduce(math.max);
     double minWeight = entries.map((entry) => entry.weight).reduce(math.min);
 
-    if (isLbs) {
-      maxWeight *= KG_LBS_RATIO;
-      minWeight *= KG_LBS_RATIO;
+    if (isKg) {
+      maxWeight *= LB_KG_RATIO;
+      minWeight *= LB_KG_RATIO;
     }
     int maxLineValue;
     int minLineValue;
@@ -313,12 +311,9 @@ class ChartPainter extends CustomPainter {
 
   /// Calculates offset at which given entry should be painted
   Offset _getEntryOffset(WeightEntry entry, DateTime beginningOfChart,
-      int minLineValue, int maxLineValue, bool isLbs) {
-    double entryWeightToShow =
-    isLbs ? entry.weight * KG_LBS_RATIO : entry.weight;
-    int daysFromBeginning = entry.dateTime
-        .difference(beginningOfChart)
-        .inDays;
+      int minLineValue, int maxLineValue, bool isKg) {
+    double entryWeightToShow = isKg ? entry.weight * LB_KG_RATIO : entry.weight;
+    int daysFromBeginning = entry.dateTime.difference(beginningOfChart).inDays;
     double relativeXposition = daysFromBeginning / (numberOfDays - 1);
     double xOffset = leftOffsetStart + relativeXposition * drawingWidth;
     double relativeYposition =

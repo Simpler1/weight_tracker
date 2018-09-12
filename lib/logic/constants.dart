@@ -1,3 +1,3 @@
-const double KG_LBS_RATIO = 2.2;
-const int MAX_KG_VALUE = 200;
-const int MIN_KG_VALUE = 5;
+const double LB_KG_RATIO = 0.453592;
+const int MAX_LB_VALUE = 450;
+const int MIN_LB_VALUE = 3;

@@ -26,7 +26,7 @@ void main() {
     Store<ReduxState> store = new Store<ReduxState>(reducerMock,
         initialState: state, middleware: [middleware].toList());
 
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 70.0, null);
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null);
     AddEntryAction action = new AddEntryAction(weightEntry);
     //when
     store.dispatch(action);
@@ -38,14 +38,14 @@ void main() {
   test('middleware EditEntryAction invokes child and set', () {
     //given
     DatabaseReferenceMock firebaseMock = new DatabaseReferenceMock();
-    when(firebaseMock.child(typed(any))).thenReturn(firebaseMock);
+    when(firebaseMock.child(any)).thenReturn(firebaseMock);
     ReduxState state = new ReduxState(
         firebaseState: new FirebaseState(mainReference: firebaseMock));
 
     Store<ReduxState> store = new Store<ReduxState>(reducerMock,
         initialState: state, middleware: [middleware].toList());
 
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 70.0, null)
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null)
       ..key = "key";
     EditEntryAction action = new EditEntryAction(weightEntry);
     //when
@@ -58,14 +58,14 @@ void main() {
   test('middleware RemoveEntryAction invokes child and remove', () {
     //given
     DatabaseReferenceMock firebaseMock = new DatabaseReferenceMock();
-    when(firebaseMock.child(typed(any))).thenReturn(firebaseMock);
+    when(firebaseMock.child(any)).thenReturn(firebaseMock);
     ReduxState state = new ReduxState(
         firebaseState: new FirebaseState(mainReference: firebaseMock));
 
     Store<ReduxState> store = new Store<ReduxState>(reducerMock,
         initialState: state, middleware: [middleware].toList());
 
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 70.0, null)
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null)
       ..key = "key";
     RemoveEntryAction action = new RemoveEntryAction(weightEntry);
     //when
@@ -77,7 +77,7 @@ void main() {
 
   test('middleware UndoRemovalAction invokes child and add', () {
     //given
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 70.0, null)
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null)
       ..key = "key";
     DatabaseReferenceMock firebaseMock = new DatabaseReferenceMock();
     when(firebaseMock.child(weightEntry.key)).thenReturn(firebaseMock);
@@ -107,11 +107,10 @@ void main() {
       return state;
     };
     DatabaseReferenceMock databaseReferenceMock = new DatabaseReferenceMock();
-    when(databaseReferenceMock.child(typed(any))).thenReturn(
-        databaseReferenceMock);
+    when(databaseReferenceMock.child(any)).thenReturn(databaseReferenceMock);
     when(databaseReferenceMock.push()).thenReturn(databaseReferenceMock);
     ReduxState state = new ReduxState(
-      weightFromNotes: 70.0,
+      weightFromNotes: 160.0,
       firebaseState: new FirebaseState(mainReference: databaseReferenceMock),
     );
     Store<ReduxState> store = new Store(reducer,
@@ -132,11 +131,10 @@ void main() {
       return state;
     };
     DatabaseReferenceMock databaseReferenceMock = new DatabaseReferenceMock();
-    when(databaseReferenceMock.child(typed(any))).thenReturn(
-        databaseReferenceMock);
+    when(databaseReferenceMock.child(any)).thenReturn(databaseReferenceMock);
     when(databaseReferenceMock.push()).thenReturn(databaseReferenceMock);
     ReduxState state = new ReduxState(
-      weightFromNotes: 70.0,
+      weightFromNotes: 160.0,
       firebaseState: new FirebaseState(mainReference: databaseReferenceMock),
     );
     Store<ReduxState> store = new Store(reducer,

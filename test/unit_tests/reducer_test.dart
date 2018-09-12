@@ -51,7 +51,7 @@ void main() {
     ReduxState initialState = new ReduxState();
     DatabaseReference databaseReference = new DatabaseReferenceMock();
     AddDatabaseReferenceAction action =
-    new AddDatabaseReferenceAction(databaseReference);
+        new AddDatabaseReferenceAction(databaseReference);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -115,7 +115,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState();
     WeightEntry updatedEntry =
-    new WeightEntry(new DateTime.now(), 60.0, "text");
+        new WeightEntry(new DateTime.now(), 60.0, "text");
     UpdateActiveWeightEntry action = new UpdateActiveWeightEntry(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -127,7 +127,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState();
     WeightEntry updatedEntry =
-    new WeightEntry(new DateTime.now(), 60.0, "text");
+        new WeightEntry(new DateTime.now(), 60.0, "text");
     OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -139,7 +139,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState();
     WeightEntry updatedEntry =
-    new WeightEntry(new DateTime.now(), 60.0, "text");
+        new WeightEntry(new DateTime.now(), 60.0, "text");
     OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -151,7 +151,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState(
         weightEntryDialogState:
-        new WeightEntryDialogReduxState(isEditMode: true));
+            new WeightEntryDialogReduxState(isEditMode: true));
     OpenAddEntryDialog action = new OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -159,29 +159,29 @@ void main() {
     expect(newState.weightEntryDialogState.isEditMode, false);
   });
 
-  test('reducer OpenAddEntryDialog creates new entry with weight 70', () {
+  test('reducer OpenAddEntryDialog creates new entry with weight 160', () {
     //given
     ReduxState initialState = new ReduxState();
     OpenAddEntryDialog action = new OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
-    expect(newState.weightEntryDialogState.activeEntry?.weight, 70);
+    expect(newState.weightEntryDialogState.activeEntry?.weight, 160);
   });
 
   test(
       'reducer OpenAddEntryDialog creates new entry with copied weight from first entry',
-          () {
-        //given
-        ReduxState initialState = new ReduxState(
-            entries: [new WeightEntry(new DateTime.now(), 60.0, "Text")]);
-        OpenAddEntryDialog action = new OpenAddEntryDialog();
-        //when
-        ReduxState newState = reduce(initialState, action);
-        //then
-        expect(newState.weightEntryDialogState.activeEntry?.weight, 60);
-        expect(newState.weightEntryDialogState.activeEntry?.note, null);
-      });
+      () {
+    //given
+    ReduxState initialState = new ReduxState(
+        entries: [new WeightEntry(new DateTime.now(), 60.0, "Text")]);
+    OpenAddEntryDialog action = new OpenAddEntryDialog();
+    //when
+    ReduxState newState = reduce(initialState, action);
+    //then
+    expect(newState.weightEntryDialogState.activeEntry?.weight, 60);
+    expect(newState.weightEntryDialogState.activeEntry?.note, null);
+  });
 
   test('reducer OnAddedAction adds entry to list', () {
     //given
@@ -254,7 +254,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState(
         progressChartState:
-        new ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
+            new ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
     SnapShotDaysToShow action = new SnapShotDaysToShow();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -305,8 +305,8 @@ void main() {
   });
 }
 
-WeightEntry createEntry(String key, DateTime dateTime, double weight,
-    String note) {
+WeightEntry createEntry(
+    String key, DateTime dateTime, double weight, String note) {
   WeightEntry entry = new WeightEntry(dateTime, weight, note);
   entry.key = key;
   return entry;

@@ -57,10 +57,10 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
             weightEntry: activeEntry,
             unit: store.state.unit,
             isEditMode: store.state.weightEntryDialogState.isEditMode,
-            weightToDisplay: store.state.unit == "kg"
+            weightToDisplay: store.state.unit == "lbs"
                 ? activeEntry.weight
                 : double.parse(
-                (activeEntry.weight * KG_LBS_RATIO).toStringAsFixed(1)),
+                    (activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
             onEntryChanged: (entry) =>
                 store.dispatch(new UpdateActiveWeightEntry(entry)),
             onDeletePressed: () {
@@ -89,9 +89,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                 leading: new Icon(Icons.today, color: Colors.grey[500]),
                 title: new DateTimeItem(
                   dateTime: viewModel.weightEntry.dateTime,
-                  onChanged: (dateTime) =>
-                      viewModel.onEntryChanged(
-                          viewModel.weightEntry..dateTime = dateTime),
+                  onChanged: (dateTime) => viewModel.onEntryChanged(
+                      viewModel.weightEntry..dateTime = dateTime),
                 ),
               ),
               new ListTile(
@@ -129,11 +128,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
 
   Widget _createAppBar(BuildContext context, DialogViewModel viewModel) {
     TextStyle actionStyle =
-    Theme
-        .of(context)
-        .textTheme
-        .subhead
-        .copyWith(color: Colors.white);
+        Theme.of(context).textTheme.subhead.copyWith(color: Colors.white);
     Text title = viewModel.isEditMode
         ? const Text("Edit entry")
         : const Text("New entry");
@@ -166,21 +161,20 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   _showWeightPicker(BuildContext context, DialogViewModel viewModel) {
     showDialog<double>(
       context: context,
-      builder: (context) =>
-      new NumberPickerDialog.decimal(
-        minValue: viewModel.unit == "kg"
-            ? MIN_KG_VALUE
-            : (MIN_KG_VALUE * KG_LBS_RATIO).toInt(),
-        maxValue: viewModel.unit == "kg"
-            ? MAX_KG_VALUE
-            : (MAX_KG_VALUE * KG_LBS_RATIO).toInt(),
-        initialDoubleValue: viewModel.weightToDisplay,
-        title: new Text("Enter your weight"),
-      ),
+      builder: (context) => new NumberPickerDialog.decimal(
+            minValue: viewModel.unit == "lbs"
+                ? MIN_LB_VALUE
+                : (MIN_LB_VALUE * LB_KG_RATIO).toInt(),
+            maxValue: viewModel.unit == "lbs"
+                ? MAX_LB_VALUE
+                : (MAX_LB_VALUE * LB_KG_RATIO).toInt(),
+            initialDoubleValue: viewModel.weightToDisplay,
+            title: new Text("Enter your weight"),
+          ),
     ).then((double value) {
       if (value != null) {
-        if (viewModel.unit == "lbs") {
-          value = value / KG_LBS_RATIO;
+        if (viewModel.unit == "kg") {
+          value = value / LB_KG_RATIO;
         }
         viewModel.onEntryChanged(viewModel.weightEntry..weight = value);
       }

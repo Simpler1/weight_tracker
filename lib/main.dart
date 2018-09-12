@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   final Store<ReduxState> store = new Store<ReduxState>(reduce,
       initialState: new ReduxState(
           entries: [],
-          unit: 'kg',
+          unit: 'lbs',
           removedEntryState: new RemovedEntryState(hasEntryBeenRemoved: false),
           firebaseState: new FirebaseState(),
           mainPageState: new MainPageReduxState(hasEntryBeenAdded: false),

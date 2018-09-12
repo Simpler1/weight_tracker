@@ -9,13 +9,13 @@ import 'package:weight_tracker/screens/history_page.dart';
 import 'package:weight_tracker/widgets/weight_list_item.dart';
 
 void main() {
-  WeightEntry entry = new WeightEntry(new DateTime.now(), 70.0, null);
-  ReduxState defaultState = new ReduxState(unit: 'kg', entries: [entry, entry]);
+  WeightEntry entry = new WeightEntry(new DateTime.now(), 160.0, null);
+  ReduxState defaultState = new ReduxState(unit: 'lbs', entries: [entry, entry]);
 
   pumpSettingWidget(Store<ReduxState> store, WidgetTester tester) async {
     await tester.pumpWidget(new StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
-          return new StoreProvider<ReduxState>(
+      return new StoreProvider<ReduxState>(
         store: store,
         child: new MaterialApp(home: new Scaffold(body: new HistoryPage())),
       );
@@ -25,8 +25,8 @@ void main() {
   testWidgets('HistoryPage has text if there are no entries',
       (WidgetTester tester) async {
     await pumpSettingWidget(
-        new Store<ReduxState>(
-            reduce, initialState: defaultState.copyWith(entries: [])),
+        new Store<ReduxState>(reduce,
+            initialState: defaultState.copyWith(entries: [])),
         tester);
     expect(find.text('Add your weight to see history'), findsOneWidget);
   });

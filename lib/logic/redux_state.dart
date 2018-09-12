@@ -18,7 +18,7 @@ class ReduxState {
     this.firebaseState = const FirebaseState(),
     this.entries = const [],
     this.mainPageState = const MainPageReduxState(),
-    this.unit = 'kg',
+    this.unit = 'lbs',
     this.removedEntryState = const RemovedEntryState(),
     this.weightEntryDialogState = const WeightEntryDialogReduxState(),
     this.progressChartState = const ProgressChartState(),

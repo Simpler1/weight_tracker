@@ -40,7 +40,7 @@ middleware(Store<ReduxState> store, action, NextDispatcher next) {
 _handleAddWeightFromNotes(Store<ReduxState> store, AddWeightFromNotes action) {
   if (store.state.firebaseState?.mainReference != null) {
     WeightEntry weightEntry =
-    new WeightEntry(new DateTime.now(), action.weight, null);
+        new WeightEntry(new DateTime.now(), action.weight, null);
     store.dispatch(new AddEntryAction(weightEntry));
     action = new AddWeightFromNotes(null);
   }
@@ -71,12 +71,12 @@ Future<double> _getSavedWeightNote() async {
 _handleAddedDatabaseReference(Store<ReduxState> store) {
   double weight = store.state.weightFromNotes;
   if (weight != null) {
-    if (store.state.unit == 'lbs') {
-      weight = weight / KG_LBS_RATIO;
+    if (store.state.unit == 'kg') {
+      weight = weight / LB_KG_RATIO;
     }
-    if (weight >= MIN_KG_VALUE && weight <= MAX_KG_VALUE) {
+    if (weight >= MIN_LB_VALUE && weight <= MAX_LB_VALUE) {
       WeightEntry weightEntry =
-      new WeightEntry(new DateTime.now(), weight, null);
+          new WeightEntry(new DateTime.now(), weight, null);
       store.dispatch(new AddEntryAction(weightEntry));
       store.dispatch(new ConsumeWeightFromNotes());
     }
@@ -148,5 +148,5 @@ Future _setUnit(String unit) async {
 
 Future<String> _loadUnit() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  return prefs.getString('unit') ?? 'kg';
+  return prefs.getString('unit') ?? 'lbs';
 }
