@@ -9,6 +9,7 @@ import 'package:weight_tracker/logic/actions.dart';
 import 'package:weight_tracker/logic/constants.dart';
 import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/model/weight_entry.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 middleware(Store<ReduxState> store, action, NextDispatcher next) {
   print(action.runtimeType);
@@ -133,12 +134,37 @@ _handleInitAction(Store<ReduxState> store) {
       if (user != null) {
         store.dispatch(new UserLoadedAction(user));
       } else {
-        FirebaseAuth.instance
-            .signInAnonymously()
-            .then((user) => store.dispatch(new UserLoadedAction(user)));
+        _getUser().then((_auth) {
+          FirebaseAuth.instance
+              .signInWithGoogle(
+                idToken: _auth.idToken,
+                accessToken: _auth.accessToken,
+              )
+              .then((user) => store.dispatch(new UserLoadedAction(user)));
+        });
       }
     });
   }
+}
+
+Future<GoogleSignInAuthentication> _getUser() async {
+  final GoogleSignIn googleSignIn = new GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+  GoogleSignInAccount currentUser = googleSignIn.currentUser;
+  if (currentUser == null) {
+    // Attempt to sign in without user interaction
+    currentUser = await googleSignIn.signInSilently();
+  }
+  if (currentUser == null) {
+    // Force the user to interactively sign in
+    currentUser = await googleSignIn.signIn();
+  }
+  final GoogleSignInAuthentication _auth = await currentUser.authentication;
+  return _auth;
 }
 
 Future _setUnit(String unit) async {
