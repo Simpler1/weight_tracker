@@ -87,7 +87,7 @@ class ProgressChartState extends State<ProgressChart> {
                     utils.prepareEntryList(viewModel.entriesToShow,
                         new DateTime.now(), viewModel.daysToShow),
                     viewModel.daysToShow,
-                    viewModel.unit == "lbs",
+                    viewModel.unit == "kg",
                   ),
                 ),
               ),
@@ -136,9 +136,9 @@ class RangeOption {
 class ChartPainter extends CustomPainter {
   final List<WeightEntry> entries;
   final int numberOfDays;
-  final bool isLbs;
+  final bool isKg;
 
-  ChartPainter(this.entries, this.numberOfDays, this.isLbs);
+  ChartPainter(this.entries, this.numberOfDays, this.isKg);
 
   double leftOffsetStart;
   double topOffsetEnd;
@@ -158,12 +158,12 @@ class ChartPainter extends CustomPainter {
       _drawParagraphInsteadOfChart(
           canvas, size, "Add your current weight to see history");
     } else {
-      Tuple2<int, int> borderLineValues = _getMinAndMaxValues(entries, isLbs);
+      Tuple2<int, int> borderLineValues = _getMinAndMaxValues(entries, isKg);
       _drawHorizontalLinesAndLabels(
           canvas, size, borderLineValues.item1, borderLineValues.item2);
       _drawBottomLabels(canvas, size);
 
-      _drawLines(canvas, borderLineValues.item1, borderLineValues.item2, isLbs);
+      _drawLines(canvas, borderLineValues.item1, borderLineValues.item2, isKg);
     }
   }
 
@@ -172,7 +172,7 @@ class ChartPainter extends CustomPainter {
 
   ///draws actual chart
   void _drawLines(
-      ui.Canvas canvas, int minLineValue, int maxLineValue, bool isLbs) {
+      ui.Canvas canvas, int minLineValue, int maxLineValue, bool isKg) {
     final paint = new Paint()
       ..color = Colors.blue[400]
       ..strokeWidth = 3.0;
@@ -180,15 +180,15 @@ class ChartPainter extends CustomPainter {
         utils.getStartDateOfChart(new DateTime.now(), numberOfDays);
     for (int i = 0; i < entries.length - 1; i++) {
       Offset startEntryOffset = _getEntryOffset(
-          entries[i], beginningOfChart, minLineValue, maxLineValue, isLbs);
+          entries[i], beginningOfChart, minLineValue, maxLineValue, isKg);
       Offset endEntryOffset = _getEntryOffset(
-          entries[i + 1], beginningOfChart, minLineValue, maxLineValue, isLbs);
+          entries[i + 1], beginningOfChart, minLineValue, maxLineValue, isKg);
       canvas.drawLine(startEntryOffset, endEntryOffset, paint);
       canvas.drawCircle(endEntryOffset, 3.0, paint);
     }
     canvas.drawCircle(
         _getEntryOffset(
-            entries.first, beginningOfChart, minLineValue, maxLineValue, isLbs),
+            entries.first, beginningOfChart, minLineValue, maxLineValue, isKg),
         5.0,
         paint);
   }
