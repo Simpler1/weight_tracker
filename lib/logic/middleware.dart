@@ -135,30 +135,32 @@ _handleInitAction(Store<ReduxState> store) {
       if (user != null) {
         store.dispatch(new UserLoadedAction(user));
       } else {
-        _getUser().then((_auth) {
-          FirebaseAuth.instance
-              .signInWithGoogle(
-                idToken: _auth.idToken,
-                accessToken: _auth.accessToken,
-              )
-              .then((user) => store.dispatch(new UserLoadedAction(user)));
-        });
+        _handleSignIn()
+          .then((FirebaseUser user) => store.dispatch(new UserLoadedAction(user)))
+          .catchError((e) {
+            print('--- Login Error: $e');
+          });
       }
     });
   }
 }
 
-Future<GoogleSignInAuthentication> _getUser() async {
-  final GoogleSignIn googleSignIn = new GoogleSignIn(
-    scopes: [
-      'email',
-    ],
+Future<FirebaseUser> _handleSignIn() async {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+        scopes: [
+        'email',
+      ],
   );
-  GoogleSignInAccount currentUser;
-  currentUser = await googleSignIn.signIn();
-  if (currentUser == null) exit(0);
-  final GoogleSignInAuthentication _auth = await currentUser.authentication;
-  return _auth;
+  GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+  if (googleUser == null) exit(0); //google_sign_in.dart signIn() returns null if canceled (instead of rethrowing the error);
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+  final FirebaseUser user = await _auth.signInWithGoogle(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+  print("Signed in as " + user.displayName);
+  return user;
 }
 
 Future _setUnit(String unit) async {
