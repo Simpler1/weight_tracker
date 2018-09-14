@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -153,15 +154,9 @@ Future<GoogleSignInAuthentication> _getUser() async {
       'email',
     ],
   );
-  GoogleSignInAccount currentUser = googleSignIn.currentUser;
-  if (currentUser == null) {
-    // Attempt to sign in without user interaction
-    currentUser = await googleSignIn.signInSilently();
-  }
-  if (currentUser == null) {
-    // Force the user to interactively sign in
-    currentUser = await googleSignIn.signIn();
-  }
+  GoogleSignInAccount currentUser;
+  currentUser = await googleSignIn.signIn();
+  if (currentUser == null) exit(0);
   final GoogleSignInAuthentication _auth = await currentUser.authentication;
   return _auth;
 }
