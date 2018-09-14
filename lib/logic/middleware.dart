@@ -151,7 +151,6 @@ Future<GoogleSignInAuthentication> _getUser() async {
   final GoogleSignIn googleSignIn = new GoogleSignIn(
     scopes: [
       'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
   GoogleSignInAccount currentUser = googleSignIn.currentUser;
