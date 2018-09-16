@@ -136,10 +136,12 @@ _handleInitAction(Store<ReduxState> store) {
         store.dispatch(new UserLoadedAction(user));
       } else {
         _handleSignIn()
-          .then((FirebaseUser user) => store.dispatch(new UserLoadedAction(user)))
-          .catchError((e) {
-            print('--- Login Error: $e');
-          });
+            .then((FirebaseUser user) =>
+                store.dispatch(new UserLoadedAction(user)))
+            .catchError((e) {
+          print('--- Exiting.  Login Error: $e');
+          exit(0);
+        });
       }
     });
   }
@@ -148,12 +150,12 @@ _handleInitAction(Store<ReduxState> store) {
 Future<FirebaseUser> _handleSignIn() async {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-        scopes: [
-        'email',
-      ],
+    scopes: [
+      'email',
+    ],
   );
   GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-  if (googleUser == null) exit(0); //google_sign_in.dart signIn() returns null if canceled (instead of rethrowing the error);
+  if (googleUser == null) throw ('User not logged in');
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
   final FirebaseUser user = await _auth.signInWithGoogle(
     accessToken: googleAuth.accessToken,
