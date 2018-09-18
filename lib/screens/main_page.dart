@@ -92,7 +92,7 @@ class MainPageState extends State<MainPage>
               return <Widget>[
                 new SliverAppBar(
                   title: new Text(widget.title),
-                  pinned: true,
+                  // pinned: true,
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
                   bottom: new TabBar(
