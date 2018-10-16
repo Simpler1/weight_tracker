@@ -50,8 +50,7 @@ void main() {
     //given
     ReduxState initialState = new ReduxState();
     DatabaseReference databaseReference = new DatabaseReferenceMock();
-    AddDatabaseReferenceAction action =
-        new AddDatabaseReferenceAction(databaseReference);
+    AddDatabaseReferenceAction action = new AddDatabaseReferenceAction(databaseReference);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -60,8 +59,7 @@ void main() {
 
   test('reducer AcceptEntryAddedAction sets flag to false', () {
     //given
-    ReduxState initialState = new ReduxState(
-        mainPageState: new MainPageReduxState(hasEntryBeenAdded: true));
+    ReduxState initialState = new ReduxState(mainPageState: new MainPageReduxState(hasEntryBeenAdded: true));
     AcceptEntryAddedAction action = new AcceptEntryAddedAction();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -81,8 +79,7 @@ void main() {
 
   test('reducer AcceptEntryRemovalAction sets flag to false', () {
     //given
-    ReduxState initialState = new ReduxState(
-        removedEntryState: new RemovedEntryState(hasEntryBeenRemoved: true));
+    ReduxState initialState = new ReduxState(removedEntryState: new RemovedEntryState(hasEntryBeenRemoved: true));
     expect(initialState.removedEntryState.hasEntryBeenRemoved, true);
     AcceptEntryRemovalAction action = new AcceptEntryRemovalAction();
     //when
@@ -114,8 +111,7 @@ void main() {
   test('reducer UpdateActiveWeightEntry changes entry', () {
     //given
     ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry =
-        new WeightEntry(new DateTime.now(), 60.0, "text");
+    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
     UpdateActiveWeightEntry action = new UpdateActiveWeightEntry(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -126,8 +122,7 @@ void main() {
   test('reducer OpenEditEntryDialog changes entry', () {
     //given
     ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry =
-        new WeightEntry(new DateTime.now(), 60.0, "text");
+    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
     OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -138,8 +133,7 @@ void main() {
   test('reducer OpenEditEntryDialog sets EditMode to true', () {
     //given
     ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry =
-        new WeightEntry(new DateTime.now(), 60.0, "text");
+    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
     OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
@@ -149,9 +143,7 @@ void main() {
 
   test('reducer OpenAddEntryDialog sets EditMode to false', () {
     //given
-    ReduxState initialState = new ReduxState(
-        weightEntryDialogState:
-            new WeightEntryDialogReduxState(isEditMode: true));
+    ReduxState initialState = new ReduxState(weightEntryDialogState: new WeightEntryDialogReduxState(isEditMode: true));
     OpenAddEntryDialog action = new OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -169,12 +161,9 @@ void main() {
     expect(newState.weightEntryDialogState.activeEntry?.weight, 160);
   });
 
-  test(
-      'reducer OpenAddEntryDialog creates new entry with copied weight from first entry',
-      () {
+  test('reducer OpenAddEntryDialog creates new entry with copied weight from first entry', () {
     //given
-    ReduxState initialState = new ReduxState(
-        entries: [new WeightEntry(new DateTime.now(), 60.0, "Text")]);
+    ReduxState initialState = new ReduxState(entries: [new WeightEntry(new DateTime.now(), 60.0, "Text", null)]);
     OpenAddEntryDialog action = new OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -252,9 +241,8 @@ void main() {
 
   test("SnapShotDaysToShow copies daysToShow to previousDaysToShow", () {
     //given
-    ReduxState initialState = new ReduxState(
-        progressChartState:
-            new ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
+    ReduxState initialState =
+        new ReduxState(progressChartState: new ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
     SnapShotDaysToShow action = new SnapShotDaysToShow();
     //when
     ReduxState newState = reduce(initialState, action);
@@ -275,8 +263,7 @@ void main() {
 
   test("ChangeDaysToShow after endGesture doesnt change daysToShow", () {
     //given
-    ReduxState initialState = new ReduxState(
-        progressChartState: new ProgressChartState(daysToShow: 31));
+    ReduxState initialState = new ReduxState(progressChartState: new ProgressChartState(daysToShow: 31));
     EndGestureOnProgressChart endAction = new EndGestureOnProgressChart();
     SnapShotDaysToShow startAction = new SnapShotDaysToShow();
     ChangeDaysToShowOnChart updateAction = new ChangeDaysToShowOnChart(10);
@@ -290,8 +277,7 @@ void main() {
 
   test("ChangeDaysToShow after 10ms after endGesture changes daysToShow", () {
     //given
-    ReduxState initialState = new ReduxState(
-        progressChartState: new ProgressChartState(daysToShow: 31));
+    ReduxState initialState = new ReduxState(progressChartState: new ProgressChartState(daysToShow: 31));
     EndGestureOnProgressChart endAction = new EndGestureOnProgressChart();
     SnapShotDaysToShow startAction = new SnapShotDaysToShow();
     ChangeDaysToShowOnChart updateAction = new ChangeDaysToShowOnChart(10);
@@ -305,9 +291,8 @@ void main() {
   });
 }
 
-WeightEntry createEntry(
-    String key, DateTime dateTime, double weight, String note) {
-  WeightEntry entry = new WeightEntry(dateTime, weight, note);
+WeightEntry createEntry(String key, DateTime dateTime, double weight, String note) {
+  WeightEntry entry = new WeightEntry(dateTime, weight, note, null);
   entry.key = key;
   return entry;
 }

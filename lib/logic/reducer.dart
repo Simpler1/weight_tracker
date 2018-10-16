@@ -7,8 +7,7 @@ ReduxState reduce(ReduxState state, action) {
   List<WeightEntry> entries = _reduceEntries(state, action);
   String unit = _reduceUnit(state, action);
   RemovedEntryState removedEntryState = _reduceRemovedEntryState(state, action);
-  WeightEntryDialogReduxState weightEntryDialogState =
-      _reduceWeightEntryDialogState(state, action);
+  WeightEntryDialogReduxState weightEntryDialogState = _reduceWeightEntryDialogState(state, action);
   FirebaseState firebaseState = _reduceFirebaseState(state, action);
   MainPageReduxState mainPageState = _reduceMainPageState(state, action);
   ProgressChartState progressChartState = _reduceChartState(state, action);
@@ -72,30 +71,22 @@ RemovedEntryState _reduceRemovedEntryState(ReduxState reduxState, action) {
     newState = newState.copyWith(hasEntryBeenRemoved: false);
   } else if (action is OnRemovedAction) {
     newState = newState.copyWith(
-        hasEntryBeenRemoved: true,
-        lastRemovedEntry: new WeightEntry.fromSnapshot(action.event.snapshot));
+        hasEntryBeenRemoved: true, lastRemovedEntry: new WeightEntry.fromSnapshot(action.event.snapshot));
   }
   return newState;
 }
 
-WeightEntryDialogReduxState _reduceWeightEntryDialogState(
-    ReduxState reduxState, action) {
+WeightEntryDialogReduxState _reduceWeightEntryDialogState(ReduxState reduxState, action) {
   WeightEntryDialogReduxState newState = reduxState.weightEntryDialogState;
   if (action is UpdateActiveWeightEntry) {
-    newState = newState.copyWith(
-        activeEntry: new WeightEntry.copy(action.weightEntry));
+    newState = newState.copyWith(activeEntry: new WeightEntry.copy(action.weightEntry));
   } else if (action is OpenAddEntryDialog) {
     newState = newState.copyWith(
         activeEntry: new WeightEntry(
-            new DateTime.now(),
-            reduxState.entries.isEmpty
-                ? 160.0
-                : reduxState.entries.first.weight,
-            null),
+            new DateTime.now(), reduxState.entries.isEmpty ? 160.0 : reduxState.entries.first.weight, null, null),
         isEditMode: false);
   } else if (action is OpenEditEntryDialog) {
-    newState =
-        newState.copyWith(activeEntry: action.weightEntry, isEditMode: true);
+    newState = newState.copyWith(activeEntry: action.weightEntry, isEditMode: true);
   }
   return newState;
 }
@@ -108,14 +99,12 @@ List<WeightEntry> _reduceEntries(ReduxState state, action) {
       ..sort((we1, we2) => we2.dateTime.compareTo(we1.dateTime));
   } else if (action is OnChangedAction) {
     WeightEntry newValue = new WeightEntry.fromSnapshot(action.event.snapshot);
-    WeightEntry oldValue =
-        entries.singleWhere((entry) => entry.key == newValue.key);
+    WeightEntry oldValue = entries.singleWhere((entry) => entry.key == newValue.key);
     entries
       ..[entries.indexOf(oldValue)] = newValue
       ..sort((we1, we2) => we2.dateTime.compareTo(we1.dateTime));
   } else if (action is OnRemovedAction) {
-    WeightEntry removedEntry = state.entries
-        .singleWhere((entry) => entry.key == action.event.snapshot.key);
+    WeightEntry removedEntry = state.entries.singleWhere((entry) => entry.key == action.event.snapshot.key);
     entries
       ..remove(removedEntry)
       ..sort((we1, we2) => we2.dateTime.compareTo(we1.dateTime));
@@ -128,16 +117,13 @@ ProgressChartState _reduceChartState(ReduxState state, action) {
   ProgressChartState newState = state.progressChartState;
   if (action is ChangeDaysToShowOnChart) {
     if (newState.lastFinishedDateTime == null ||
-        newState.lastFinishedDateTime.isBefore(
-            new DateTime.now().subtract(const Duration(milliseconds: 10)))) {
+        newState.lastFinishedDateTime.isBefore(new DateTime.now().subtract(const Duration(milliseconds: 10)))) {
       newState = newState.copyWith(daysToShow: action.daysToShow);
     }
   } else if (action is SnapShotDaysToShow) {
     newState = newState.copyWith(previousDaysToShow: newState.daysToShow);
   } else if (action is EndGestureOnProgressChart) {
-    newState = newState.copyWith(
-        previousDaysToShow: newState.daysToShow,
-        lastFinishedDateTime: new DateTime.now());
+    newState = newState.copyWith(previousDaysToShow: newState.daysToShow, lastFinishedDateTime: new DateTime.now());
   }
   return newState;
 }

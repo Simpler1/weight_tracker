@@ -6,18 +6,14 @@ void main() {
   test('general filtring list test', () {
     //given
     DateTime now = new DateTime.utc(2017, 1, 1, 8, 0);
-    WeightEntry entry1 = new WeightEntry(now, 160.0, null);
-    WeightEntry entry2 =
-        new WeightEntry(now.subtract(new Duration(days: 6)), 160.0, null);
-    WeightEntry entry3 =
-        new WeightEntry(now.subtract(new Duration(days: 7)), 160.0, null);
-    WeightEntry entry4 =
-        new WeightEntry(now.subtract(new Duration(days: 8)), 160.0, null);
+    WeightEntry entry1 = new WeightEntry(now, 160.0, null, null);
+    WeightEntry entry2 = new WeightEntry(now.subtract(new Duration(days: 6)), 160.0, null, null);
+    WeightEntry entry3 = new WeightEntry(now.subtract(new Duration(days: 7)), 160.0, null, null);
+    WeightEntry entry4 = new WeightEntry(now.subtract(new Duration(days: 8)), 160.0, null, null);
     int daysToShow = 7;
     List<WeightEntry> entries = [entry1, entry2, entry3, entry4];
     //when
-    List<WeightEntry> newEntries =
-        utils.prepareEntryList(entries, now, daysToShow);
+    List<WeightEntry> newEntries = utils.prepareEntryList(entries, now, daysToShow);
     //then
     expect(newEntries, contains(entry1));
     expect(newEntries, contains(entry2));
@@ -29,19 +25,14 @@ void main() {
     //given
     int daysToShow = 2;
     DateTime now = new DateTime.utc(2017, 10, 10, 8, 0);
-    WeightEntry firstEntryAfterBorder = new WeightEntry(now, 160.0, null);
-    WeightEntry lastEntryBeforeBorder =
-        new WeightEntry(now.subtract(new Duration(days: 2)), 180.0, null);
+    WeightEntry firstEntryAfterBorder = new WeightEntry(now, 160.0, null, null);
+    WeightEntry lastEntryBeforeBorder = new WeightEntry(now.subtract(new Duration(days: 2)), 180.0, null, null);
     List<WeightEntry> entries = [firstEntryAfterBorder, lastEntryBeforeBorder];
     //when
-    List<WeightEntry> newEntries =
-        utils.prepareEntryList(entries, now, daysToShow);
+    List<WeightEntry> newEntries = utils.prepareEntryList(entries, now, daysToShow);
     //then
     expect(newEntries, contains(firstEntryAfterBorder));
     expect(newEntries, isNot(contains(lastEntryBeforeBorder)));
-    expect(
-        newEntries,
-        anyElement((WeightEntry entry) =>
-            entry.weight == 170.0 && entry.dateTime.day == now.day - 1));
+    expect(newEntries, anyElement((WeightEntry entry) => entry.weight == 170.0 && entry.dateTime.day == now.day - 1));
   });
 }

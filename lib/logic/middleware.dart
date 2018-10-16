@@ -41,8 +41,7 @@ middleware(Store<ReduxState> store, action, NextDispatcher next) {
 
 _handleAddWeightFromNotes(Store<ReduxState> store, AddWeightFromNotes action) {
   if (store.state.firebaseState?.mainReference != null) {
-    WeightEntry weightEntry =
-        new WeightEntry(new DateTime.now(), action.weight, null);
+    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), action.weight, null, null);
     store.dispatch(new AddEntryAction(weightEntry));
     action = new AddWeightFromNotes(null);
   }
@@ -56,8 +55,7 @@ _handleGetSavedWeightNote(Store<ReduxState> store) async {
 }
 
 Future<double> _getSavedWeightNote() async {
-  String sharedData = await const MethodChannel('app.channel.shared.data')
-      .invokeMethod("getSavedNote");
+  String sharedData = await const MethodChannel('app.channel.shared.data').invokeMethod("getSavedNote");
   if (sharedData != null) {
     int firstIndex = sharedData.indexOf(new RegExp("[0-9]"));
     int lastIndex = sharedData.lastIndexOf(new RegExp("[0-9]"));
@@ -77,8 +75,7 @@ _handleAddedDatabaseReference(Store<ReduxState> store) {
       weight = weight / LB_KG_RATIO;
     }
     if (weight >= MIN_LB_VALUE && weight <= MAX_LB_VALUE) {
-      WeightEntry weightEntry =
-          new WeightEntry(new DateTime.now(), weight, null);
+      WeightEntry weightEntry = new WeightEntry(new DateTime.now(), weight, null, null);
       store.dispatch(new AddEntryAction(weightEntry));
       store.dispatch(new ConsumeWeightFromNotes());
     }
@@ -86,46 +83,32 @@ _handleAddedDatabaseReference(Store<ReduxState> store) {
 }
 
 _handleUserLoadedAction(Store<ReduxState> store) {
-  store.dispatch(new AddDatabaseReferenceAction(FirebaseDatabase.instance
-      .reference()
-      .child(store.state.firebaseState.firebaseUser.uid)
-      .child("entries")
-        ..onChildAdded
-            .listen((event) => store.dispatch(new OnAddedAction(event)))
-        ..onChildChanged
-            .listen((event) => store.dispatch(new OnChangedAction(event)))
-        ..onChildRemoved
-            .listen((event) => store.dispatch(new OnRemovedAction(event)))));
+  store.dispatch(new AddDatabaseReferenceAction(
+      FirebaseDatabase.instance.reference().child(store.state.firebaseState.firebaseUser.uid).child("entries")
+        ..onChildAdded.listen((event) => store.dispatch(new OnAddedAction(event)))
+        ..onChildChanged.listen((event) => store.dispatch(new OnChangedAction(event)))
+        ..onChildRemoved.listen((event) => store.dispatch(new OnRemovedAction(event)))));
 }
 
 _handleSetUnitAction(SetUnitAction action, Store<ReduxState> store) {
-  _setUnit(action.unit)
-      .then((nil) => store.dispatch(new OnUnitChangedAction(action.unit)));
+  _setUnit(action.unit).then((nil) => store.dispatch(new OnUnitChangedAction(action.unit)));
 }
 
 _handleUndoRemovalAction(Store<ReduxState> store) {
   WeightEntry lastRemovedEntry = store.state.removedEntryState.lastRemovedEntry;
-  store.state.firebaseState.mainReference
-      .child(lastRemovedEntry.key)
-      .set(lastRemovedEntry.toJson());
+  store.state.firebaseState.mainReference.child(lastRemovedEntry.key).set(lastRemovedEntry.toJson());
 }
 
 _handleRemoveEntryAction(Store<ReduxState> store, RemoveEntryAction action) {
-  store.state.firebaseState.mainReference
-      .child(action.weightEntry.key)
-      .remove();
+  store.state.firebaseState.mainReference.child(action.weightEntry.key).remove();
 }
 
 _handleEditEntryAction(Store<ReduxState> store, EditEntryAction action) {
-  store.state.firebaseState.mainReference
-      .child(action.weightEntry.key)
-      .set(action.weightEntry.toJson());
+  store.state.firebaseState.mainReference.child(action.weightEntry.key).set(action.weightEntry.toJson());
 }
 
 _handleAddEntryAction(Store<ReduxState> store, AddEntryAction action) {
-  store.state.firebaseState.mainReference
-      .push()
-      .set(action.weightEntry.toJson());
+  store.state.firebaseState.mainReference.push().set(action.weightEntry.toJson());
 }
 
 _handleInitAction(Store<ReduxState> store) {
@@ -135,10 +118,7 @@ _handleInitAction(Store<ReduxState> store) {
       if (user != null) {
         store.dispatch(new UserLoadedAction(user));
       } else {
-        _handleSignIn()
-            .then((FirebaseUser user) =>
-                store.dispatch(new UserLoadedAction(user)))
-            .catchError((e) {
+        _handleSignIn().then((FirebaseUser user) => store.dispatch(new UserLoadedAction(user))).catchError((e) {
           print('--- Exiting.  Login Error: $e');
           exit(0);
         });

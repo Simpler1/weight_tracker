@@ -51,18 +51,15 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   Widget build(BuildContext context) {
     return new StoreConnector<ReduxState, DialogViewModel>(
       converter: (store) {
-        WeightEntry activeEntry =
-            store.state.weightEntryDialogState.activeEntry;
+        WeightEntry activeEntry = store.state.weightEntryDialogState.activeEntry;
         return new DialogViewModel(
             weightEntry: activeEntry,
             unit: store.state.unit,
             isEditMode: store.state.weightEntryDialogState.isEditMode,
             weightToDisplay: store.state.unit == "lbs"
                 ? activeEntry.weight
-                : double.parse(
-                    (activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
-            onEntryChanged: (entry) =>
-                store.dispatch(new UpdateActiveWeightEntry(entry)),
+                : double.parse((activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
+            onEntryChanged: (entry) => store.dispatch(new UpdateActiveWeightEntry(entry)),
             onDeletePressed: () {
               store.dispatch(new RemoveEntryAction(activeEntry));
               Navigator.of(context).pop();
@@ -89,8 +86,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                 leading: new Icon(Icons.today, color: Colors.grey[500]),
                 title: new DateTimeItem(
                   dateTime: viewModel.weightEntry.dateTime,
-                  onChanged: (dateTime) => viewModel.onEntryChanged(
-                      viewModel.weightEntry..dateTime = dateTime),
+                  onChanged: (dateTime) => viewModel.onEntryChanged(viewModel.weightEntry..dateTime = dateTime),
                 ),
               ),
               new ListTile(
@@ -101,11 +97,18 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                   width: 24.0,
                 ),
                 title: new Text(
-                  viewModel.weightToDisplay.toStringAsFixed(1) +
-                      " " +
-                      viewModel.unit,
+                  viewModel.weightToDisplay.toStringAsFixed(1) + " " + viewModel.unit,
                 ),
                 onTap: () => _showWeightPicker(context, viewModel),
+              ),
+              new ListTile(
+                leading: new Icon(Icons.face, color: Colors.grey[500]),
+                title: new Text(
+                  viewModel.weightEntry.percentBodyFat != null
+                      ? viewModel.weightEntry.percentBodyFat.toStringAsFixed(1) + " %"
+                      : "",
+                ),
+                onTap: () => _showFatPicker(context, viewModel),
               ),
               new ListTile(
                 leading: new Icon(Icons.speaker_notes, color: Colors.grey[500]),
@@ -115,8 +118,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                     ),
                     controller: _textController,
                     onChanged: (value) {
-                      viewModel
-                          .onEntryChanged(viewModel.weightEntry..note = value);
+                      viewModel.onEntryChanged(viewModel.weightEntry..note = value);
                     }),
               ),
             ],
@@ -127,11 +129,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   }
 
   Widget _createAppBar(BuildContext context, DialogViewModel viewModel) {
-    TextStyle actionStyle =
-        Theme.of(context).textTheme.subhead.copyWith(color: Colors.white);
-    Text title = viewModel.isEditMode
-        ? const Text("Edit entry")
-        : const Text("New entry");
+    TextStyle actionStyle = Theme.of(context).textTheme.subhead.copyWith(color: Colors.white);
+    Text title = viewModel.isEditMode ? const Text("Edit entry") : const Text("New entry");
     List<Widget> actions = [];
     if (viewModel.isEditMode) {
       actions.add(
@@ -162,12 +161,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     showDialog<double>(
       context: context,
       builder: (context) => new NumberPickerDialog.decimal(
-            minValue: viewModel.unit == "lbs"
-                ? MIN_LB_VALUE
-                : (MIN_LB_VALUE * LB_KG_RATIO).toInt(),
-            maxValue: viewModel.unit == "lbs"
-                ? MAX_LB_VALUE
-                : (MAX_LB_VALUE * LB_KG_RATIO).toInt(),
+            minValue: viewModel.unit == "lbs" ? MIN_LB_VALUE : (MIN_LB_VALUE * LB_KG_RATIO).toInt(),
+            maxValue: viewModel.unit == "lbs" ? MAX_LB_VALUE : (MAX_LB_VALUE * LB_KG_RATIO).toInt(),
             initialDoubleValue: viewModel.weightToDisplay,
             title: new Text("Enter your weight"),
           ),
@@ -180,17 +175,30 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       }
     });
   }
+
+  _showFatPicker(BuildContext context, DialogViewModel viewModel) {
+    showDialog<double>(
+      context: context,
+      builder: (context) => new NumberPickerDialog.decimal(
+            minValue: 0,
+            maxValue: 100,
+            initialDoubleValue:
+                viewModel.weightEntry.percentBodyFat != null ? viewModel.weightEntry.percentBodyFat : 22.0,
+            title: new Text("Enter your % body fat"),
+          ),
+    ).then((double value) {
+      if (value != null) {
+        viewModel.onEntryChanged(viewModel.weightEntry..percentBodyFat = value);
+      }
+    });
+  }
 }
 
 class DateTimeItem extends StatelessWidget {
   DateTimeItem({Key key, DateTime dateTime, @required this.onChanged})
       : assert(onChanged != null),
-        date = dateTime == null
-            ? new DateTime.now()
-            : new DateTime(dateTime.year, dateTime.month, dateTime.day),
-        time = dateTime == null
-            ? new DateTime.now()
-            : new TimeOfDay(hour: dateTime.hour, minute: dateTime.minute),
+        date = dateTime == null ? new DateTime.now() : new DateTime(dateTime.year, dateTime.month, dateTime.day),
+        time = dateTime == null ? new DateTime.now() : new TimeOfDay(hour: dateTime.hour, minute: dateTime.minute),
         super(key: key);
 
   final DateTime date;
@@ -213,9 +221,7 @@ class DateTimeItem extends StatelessWidget {
         new InkWell(
           key: new Key('TimeItem'),
           onTap: (() => _showTimePicker(context)),
-          child: new Padding(
-              padding: new EdgeInsets.symmetric(vertical: 8.0),
-              child: new Text(time.format(context))),
+          child: new Padding(padding: new EdgeInsets.symmetric(vertical: 8.0), child: new Text(time.format(context))),
         ),
       ],
     );
@@ -229,18 +235,15 @@ class DateTimeItem extends StatelessWidget {
         lastDate: new DateTime.now());
 
     if (dateTimePicked != null) {
-      onChanged(new DateTime(dateTimePicked.year, dateTimePicked.month,
-          dateTimePicked.day, time.hour, time.minute));
+      onChanged(new DateTime(dateTimePicked.year, dateTimePicked.month, dateTimePicked.day, time.hour, time.minute));
     }
   }
 
   Future _showTimePicker(BuildContext context) async {
-    TimeOfDay timeOfDay =
-        await showTimePicker(context: context, initialTime: time);
+    TimeOfDay timeOfDay = await showTimePicker(context: context, initialTime: time);
 
     if (timeOfDay != null) {
-      onChanged(new DateTime(
-          date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute));
+      onChanged(new DateTime(date.year, date.month, date.day, timeOfDay.hour, timeOfDay.minute));
     }
   }
 }
