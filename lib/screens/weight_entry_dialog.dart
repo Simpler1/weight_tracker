@@ -1,14 +1,17 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:intl/intl.dart';
 import 'package:meta/meta.dart';
-import 'package:numberpicker/numberpicker.dart';
 import 'package:weight_tracker/logic/actions.dart';
 import 'package:weight_tracker/logic/constants.dart';
 import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/model/weight_entry.dart';
+import '../util/decimal_number_text_input_formatter.dart';
 
 class DialogViewModel {
   final WeightEntry weightEntry;
@@ -38,13 +41,40 @@ class WeightEntryDialog extends StatefulWidget {
 }
 
 class WeightEntryDialogState extends State<WeightEntryDialog> {
-  TextEditingController _textController;
   bool wasBuiltOnce = false;
+  final _weightController = TextEditingController();
+  final _fatController = TextEditingController();
+  final _noteController = TextEditingController();
+  final _weightFocusNode = FocusNode();
+  final _fatFocusNode = FocusNode();
+  final _keyboardType = TextInputType.numberWithOptions(decimal: true);
+  final _decimalFormatter = DecimalNumberTextInputFormatter(decimalPlaces: 1);
 
   @override
   void initState() {
     super.initState();
-    _textController = new TextEditingController();
+    _weightFocusNode.addListener(() {
+      int _baseOffset = _weightController.text.length > 3 ? _weightController.text.length - 3 : 0;
+      if (_weightFocusNode.hasFocus) {
+        Timer(const Duration(milliseconds: 200), () =>  // This is a hack to get the prehighlighting to work
+          _weightController.selection = TextSelection(
+            baseOffset: _baseOffset,
+            extentOffset: _weightController.text.length,
+          )
+        );
+      }
+    });
+    _fatFocusNode.addListener(() {
+      int _baseOffset = _fatController.text.length > 3 ? _fatController.text.length - 3 : 0;
+      if (_fatFocusNode.hasFocus) {
+        Timer(const Duration(milliseconds: 200), () =>  // This is a hack to get the prehighlighting to work
+          _fatController.selection = TextSelection(
+            baseOffset: _baseOffset,
+            extentOffset: _fatController.text.length,
+          )
+        );
+      }
+    });
   }
 
   @override
@@ -76,7 +106,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       builder: (context, viewModel) {
         if (!wasBuiltOnce) {
           wasBuiltOnce = true;
-          _textController.text = viewModel.weightEntry.note;
+          _noteController.text = viewModel.weightEntry.note;
         }
         return new Scaffold(
           appBar: _createAppBar(context, viewModel),
@@ -90,25 +120,18 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                 ),
               ),
               new ListTile(
-                leading: new Image.asset(
-                  "assets/scale-bathroom.png",
-                  color: Colors.grey[500],
-                  height: 24.0,
-                  width: 24.0,
+                leading: Text('Weight in ${viewModel.unit}'),
+                title: weightTextFormField(
+                  viewModel.weightToDisplay.toStringAsFixed(1),
                 ),
-                title: new Text(
-                  viewModel.weightToDisplay.toStringAsFixed(1) + " " + viewModel.unit,
-                ),
-                onTap: () => _showWeightPicker(context, viewModel),
               ),
               new ListTile(
-                leading: new Icon(Icons.face, color: Colors.grey[500]),
-                title: new Text(
+                leading: Text('% Body Fat'),
+                title: fatTextFormField(
                   viewModel.weightEntry.percentBodyFat != null
-                      ? viewModel.weightEntry.percentBodyFat.toStringAsFixed(1) + " %"
+                      ? viewModel.weightEntry.percentBodyFat.toStringAsFixed(1)
                       : "",
                 ),
-                onTap: () => _showFatPicker(context, viewModel),
               ),
               new ListTile(
                 leading: new Icon(Icons.speaker_notes, color: Colors.grey[500]),
@@ -116,16 +139,53 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                     decoration: new InputDecoration(
                       hintText: 'Optional note',
                     ),
-                    controller: _textController,
+                    controller: _noteController,
                     onChanged: (value) {
                       viewModel.onEntryChanged(viewModel.weightEntry..note = value);
-                    }),
+                    },
+                ),
               ),
             ],
           ),
         );
       },
     );
+  }
+
+  Widget weightTextFormField(String _value) {
+    _weightController.text = _value;
+    return TextFormField(
+      autofocus: true,
+      focusNode: _weightFocusNode,
+      controller: _weightController,
+      keyboardType: _keyboardType,
+      inputFormatters: [
+        _decimalFormatter,
+      ],
+      // textInputAction: TextInputAction.next,
+    );
+  }
+
+  Widget fatTextFormField(String _value) {
+    _fatController.text = _value;
+    return TextFormField(
+      autofocus: false,
+      focusNode: _fatFocusNode,
+      controller: _fatController,
+      keyboardType: _keyboardType,
+      inputFormatters: [
+        _decimalFormatter,
+      ],
+      // textInputAction: TextInputAction.next,
+    );
+  }
+
+  @override
+  void dispose() {
+    // Clean up the controller when the Widget is disposed
+    _weightController.dispose();
+    _fatController.dispose();
+    super.dispose();
   }
 
   Widget _createAppBar(BuildContext context, DialogViewModel viewModel) {
@@ -156,42 +216,6 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       actions: actions,
     );
   }
-
-  _showWeightPicker(BuildContext context, DialogViewModel viewModel) {
-    showDialog<double>(
-      context: context,
-      builder: (context) => new NumberPickerDialog.decimal(
-            minValue: viewModel.unit == "lbs" ? MIN_LB_VALUE : (MIN_LB_VALUE * LB_KG_RATIO).toInt(),
-            maxValue: viewModel.unit == "lbs" ? MAX_LB_VALUE : (MAX_LB_VALUE * LB_KG_RATIO).toInt(),
-            initialDoubleValue: viewModel.weightToDisplay,
-            title: new Text("Enter your weight"),
-          ),
-    ).then((double value) {
-      if (value != null) {
-        if (viewModel.unit == "kg") {
-          value = value / LB_KG_RATIO;
-        }
-        viewModel.onEntryChanged(viewModel.weightEntry..weight = value);
-      }
-    });
-  }
-
-  _showFatPicker(BuildContext context, DialogViewModel viewModel) {
-    showDialog<double>(
-      context: context,
-      builder: (context) => new NumberPickerDialog.decimal(
-            minValue: 0,
-            maxValue: 100,
-            initialDoubleValue:
-                viewModel.weightEntry.percentBodyFat != null ? viewModel.weightEntry.percentBodyFat : 22.0,
-            title: new Text("Enter your % body fat"),
-          ),
-    ).then((double value) {
-      if (value != null) {
-        viewModel.onEntryChanged(viewModel.weightEntry..percentBodyFat = value);
-      }
-    });
-  }
 }
 
 class DateTimeItem extends StatelessWidget {
@@ -214,14 +238,18 @@ class DateTimeItem extends StatelessWidget {
             key: new Key('CalendarItem'),
             onTap: (() => _showDatePicker(context)),
             child: new Padding(
-                padding: new EdgeInsets.symmetric(vertical: 8.0),
-                child: new Text(new DateFormat('EEEE, MMMM d').format(date))),
+              padding: new EdgeInsets.symmetric(vertical: 8.0),
+              child: new Text(new DateFormat('EEEE, MMMM d').format(date)),
+            ),
           ),
         ),
         new InkWell(
           key: new Key('TimeItem'),
           onTap: (() => _showTimePicker(context)),
-          child: new Padding(padding: new EdgeInsets.symmetric(vertical: 8.0), child: new Text(time.format(context))),
+          child: new Padding(
+            padding: new EdgeInsets.symmetric(vertical: 8.0),
+            child: new Text(time.format(context)),
+          ),
         ),
       ],
     );
