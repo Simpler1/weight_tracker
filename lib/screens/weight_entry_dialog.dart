@@ -18,6 +18,7 @@ class DialogViewModel {
   final String unit;
   final bool isEditMode;
   final double weightToDisplay;
+  final double percentFatToDisplay;
   final Function(WeightEntry) onEntryChanged;
   final Function() onDeletePressed;
   final Function() onSavePressed;
@@ -27,6 +28,7 @@ class DialogViewModel {
     this.unit,
     this.isEditMode,
     this.weightToDisplay,
+    this.percentFatToDisplay,
     this.onEntryChanged,
     this.onDeletePressed,
     this.onSavePressed,
@@ -89,6 +91,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
             weightToDisplay: store.state.unit == "lbs"
                 ? activeEntry.weight
                 : double.parse((activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
+            percentFatToDisplay: activeEntry.percentBodyFat == null ? 24.3 : activeEntry.percentBodyFat,
             onEntryChanged: (entry) => store.dispatch(new UpdateActiveWeightEntry(entry)),
             onDeletePressed: () {
               store.dispatch(new RemoveEntryAction(activeEntry));
@@ -128,9 +131,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
               new ListTile(
                 leading: Text('% Body Fat'),
                 title: fatTextFormField(
-                  viewModel.weightEntry.percentBodyFat != null
-                      ? viewModel.weightEntry.percentBodyFat.toStringAsFixed(1)
-                      : "",
+                  viewModel.percentFatToDisplay.toStringAsFixed(1),
                 ),
               ),
               new ListTile(
