@@ -56,7 +56,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     _weightFocusNode.addListener(() {
       int _baseOffset = _weightController.text.length > 3 ? _weightController.text.length - 3 : 0;
       if (_weightFocusNode.hasFocus) {
-        Timer(const Duration(milliseconds: 200), () =>  // This is a hack to get the prehighlighting to work
+        Timer(const Duration(milliseconds: 1200), () =>  // This is a hack to get the prehighlighting to work
           _weightController.selection = TextSelection(
             baseOffset: _baseOffset,
             extentOffset: _weightController.text.length,
@@ -67,7 +67,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     _fatFocusNode.addListener(() {
       int _baseOffset = _fatController.text.length > 3 ? _fatController.text.length - 3 : 0;
       if (_fatFocusNode.hasFocus) {
-        Timer(const Duration(milliseconds: 200), () =>  // This is a hack to get the prehighlighting to work
+        Timer(const Duration(milliseconds: 400), () =>  // This is a hack to get the prehighlighting to work
           _fatController.selection = TextSelection(
             baseOffset: _baseOffset,
             extentOffset: _fatController.text.length,
@@ -155,7 +155,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   Widget weightTextFormField(String _value) {
     _weightController.text = _value;
     return TextFormField(
-      autofocus: true,
+      autofocus: false,  // If this is set to true, the preselected text doesn't work
       focusNode: _weightFocusNode,
       controller: _weightController,
       keyboardType: _keyboardType,
