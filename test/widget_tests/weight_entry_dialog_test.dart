@@ -156,7 +156,8 @@ void main() {
           weightEntryDialogState: dialogState.copyWith(activeEntry: entry),
         ));
     await pumpSettingWidget(store, tester);
-    await tester.enterText(find.byType(TextField), 'Lorem');
+    expect(find.text(''), findsOneWidget);
+    await tester.enterText(find.text(''), 'Lorem');
     expect(store.state.weightEntryDialogState.activeEntry.note, 'Lorem');
-  }, skip: true); // Why does this no longer pass?
+  });
 }
