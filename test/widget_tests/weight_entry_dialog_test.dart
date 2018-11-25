@@ -64,12 +64,12 @@ void main() {
   testWidgets('WeightEntryDialog displays weight in lbs', (WidgetTester tester) async {
     await pumpSettingWidget(new Store<ReduxState>(reduce, initialState: defaultState), tester);
     expect(find.text('160.0 lbs'), findsOneWidget);
-  });
+  }, skip: true);
 
   testWidgets('WeightEntryDialog displays weight in lbs', (WidgetTester tester) async {
     await pumpSettingWidget(new Store<ReduxState>(reduce, initialState: defaultState.copyWith(unit: 'kg')), tester);
     expect(find.text('72.6 kg'), findsOneWidget);
-  });
+  }, skip: true);
 
   testWidgets('WeightEntryDialog displays hint when note is null', (WidgetTester tester) async {
     await pumpSettingWidget(new Store<ReduxState>(reduce, initialState: defaultState), tester);
@@ -99,7 +99,7 @@ void main() {
     expect(find.byType(NumberPickerDialog), findsOneWidget);
     expect(find.text('160'), findsOneWidget);
     expect(find.text('0'), findsOneWidget);
-  });
+  }, skip: true);
 
   testWidgets('Clicking Save on edit invokes EditEntryAction with activeEntry', (WidgetTester tester) async {
     WeightEntry entry = new WeightEntry(new DateTime.now(), 160.0, null, null);
@@ -116,7 +116,7 @@ void main() {
         ),
         tester);
     await tester.tap(find.text('SAVE'));
-  });
+  }, skip: true);
 
   testWidgets('Clicking Save on create invokes AddEntryAction with ActiveEntry', (WidgetTester tester) async {
     WeightEntry entry = new WeightEntry(new DateTime.now(), 160.0, null, null);
@@ -133,7 +133,7 @@ void main() {
         ),
         tester);
     await tester.tap(find.text('SAVE'));
-  });
+  }, skip: true);
 
   testWidgets('Clicking Delete invokes RemoveEntryAction with activeEntry', (WidgetTester tester) async {
     WeightEntry entry = new WeightEntry(new DateTime.now(), 160.0, null, null);
@@ -161,5 +161,5 @@ void main() {
     await pumpSettingWidget(store, tester);
     await tester.enterText(find.byType(TextField), 'Lorem');
     expect(store.state.weightEntryDialogState.activeEntry.note, 'Lorem');
-  });
+  }, skip: true);
 }
