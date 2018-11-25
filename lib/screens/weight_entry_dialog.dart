@@ -130,10 +130,12 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                 viewModel.weightToDisplay,
                 viewModel,
               ),
+              const SizedBox(height: 12.0),
               fatTextFormField(
                 viewModel.percentFatToDisplay,
                 viewModel,
               ),
+              const SizedBox(height: 12.0),
               TextField(
                 decoration: InputDecoration(
                   border: UnderlineInputBorder(),
