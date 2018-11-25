@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,7 +47,6 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   final _noteController = TextEditingController();
   final _weightFocusNode = FocusNode();
   final _fatFocusNode = FocusNode();
-  final _keyboardType = TextInputType.numberWithOptions(decimal: true);
   final _decimalFormatter = DecimalNumberTextInputFormatter(decimalPlaces: 1);
 
   @override
@@ -58,23 +55,25 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     _weightFocusNode.addListener(() {
       int _baseOffset = _weightController.text.length > 3 ? _weightController.text.length - 3 : 0;
       if (_weightFocusNode.hasFocus) {
-        Timer(const Duration(milliseconds: 1200), () =>  // This is a hack to get the prehighlighting to work
-          _weightController.selection = TextSelection(
-            baseOffset: _baseOffset,
-            extentOffset: _weightController.text.length,
-          )
-        );
+        Timer(
+            const Duration(milliseconds: 1200),
+            () => // This is a hack to get the prehighlighting to work
+                _weightController.selection = TextSelection(
+                  baseOffset: _baseOffset,
+                  extentOffset: _weightController.text.length,
+                ));
       }
     });
     _fatFocusNode.addListener(() {
       int _baseOffset = _fatController.text.length > 3 ? _fatController.text.length - 3 : 0;
       if (_fatFocusNode.hasFocus) {
-        Timer(const Duration(milliseconds: 400), () =>  // This is a hack to get the prehighlighting to work
-          _fatController.selection = TextSelection(
-            baseOffset: _baseOffset,
-            extentOffset: _fatController.text.length,
-          )
-        );
+        Timer(
+            const Duration(milliseconds: 400),
+            () => // This is a hack to get the prehighlighting to work
+                _fatController.selection = TextSelection(
+                  baseOffset: _baseOffset,
+                  extentOffset: _fatController.text.length,
+                ));
       }
     });
   }
@@ -99,11 +98,9 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
             },
             onSavePressed: () {
               store.dispatch(UpdateActiveWeightEntry(
-                activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', '')))
-              );
+                  activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
               store.dispatch(UpdateActiveWeightEntry(
-                activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', '')))
-              );
+                  activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', ''))));
 
               if (store.state.weightEntryDialogState.isEditMode) {
                 store.dispatch(EditEntryAction(activeEntry));
@@ -129,31 +126,26 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                   onChanged: (dateTime) => viewModel.onEntryChanged(viewModel.weightEntry..dateTime = dateTime),
                 ),
               ),
-              ListTile(
-                leading: Text('Weight'),
-                title: weightTextFormField(
-                  viewModel.weightToDisplay,
-                  viewModel,
-                ),
+              weightTextFormField(
+                viewModel.weightToDisplay,
+                viewModel,
               ),
-              ListTile(
-                leading: Text('Body Fat'),
-                title: fatTextFormField(
-                  viewModel.percentFatToDisplay,
-                  viewModel,
-                ),
+              fatTextFormField(
+                viewModel.percentFatToDisplay,
+                viewModel,
               ),
-              ListTile(
-                leading: Icon(Icons.speaker_notes, color: Colors.grey[500]),
-                title: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Optional note',
-                    ),
-                    controller: _noteController,
-                    onChanged: (value) {
-                      viewModel.onEntryChanged(viewModel.weightEntry..note = value);
-                    },
+              TextField(
+                decoration: InputDecoration(
+                  border: UnderlineInputBorder(),
+                  filled: true,
+                  icon: Icon(Icons.speaker_notes, color: Colors.grey[500]),
+                  labelText: 'Note',
+                  hintText: 'Did anything special happen yesterday?',
                 ),
+                controller: _noteController,
+                onChanged: (value) {
+                  viewModel.onEntryChanged(viewModel.weightEntry..note = value);
+                },
               ),
             ],
           ),
@@ -165,17 +157,21 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   Widget weightTextFormField(double _value, DialogViewModel viewModel) {
     _weightController.text = _value.toStringAsFixed(1);
     return TextFormField(
-      autofocus: false,  // If this is set to true, the preselected text doesn't work
+      autofocus: false, // If this is set to true, the preselected text doesn't work
       focusNode: _weightFocusNode,
       controller: _weightController,
-      keyboardType: _keyboardType,
+      keyboardType: TextInputType.phone,
       inputFormatters: [
         _decimalFormatter,
       ],
       decoration: InputDecoration(
         suffixText: ' ' + viewModel.unit,
+        icon: Icon(Icons.dialpad, color: Colors.grey[500]),
+        border: UnderlineInputBorder(),
+        filled: true,
+        hintText: 'What is your weight today?',
+        labelText: 'Weight',
       ),
-      textAlign: TextAlign.end,
       onFieldSubmitted: (String value) {
         print('Weight onFieldSubmitted ...');
         FocusScope.of(context).requestFocus(_fatFocusNode);
@@ -194,14 +190,18 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       autofocus: false,
       focusNode: _fatFocusNode,
       controller: _fatController,
-      keyboardType: _keyboardType,
+      keyboardType: TextInputType.phone,
       inputFormatters: [
         _decimalFormatter,
       ],
       decoration: InputDecoration(
         suffixText: ' %',
+        icon: Icon(Icons.pin_drop, color: Colors.grey[500]),
+        border: UnderlineInputBorder(),
+        filled: true,
+        hintText: 'What is your percent body fat today?',
+        labelText: '% Body Fat',
       ),
-      textAlign: TextAlign.end,
       onFieldSubmitted: (String value) {
         print('Fat onFieldSubmitted ...');
         viewModel.onSavePressed();
