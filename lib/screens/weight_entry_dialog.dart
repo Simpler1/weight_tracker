@@ -98,8 +98,12 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
               Navigator.of(context).pop();
             },
             onSavePressed: () {
-              store.dispatch(new UpdateActiveWeightEntry(activeEntry..weight = double.tryParse(_weightController.text)));
-              store.dispatch(new UpdateActiveWeightEntry(activeEntry..percentBodyFat = double.tryParse(_fatController.text)));
+              store.dispatch(new UpdateActiveWeightEntry(
+                activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', '')))
+              );
+              store.dispatch(new UpdateActiveWeightEntry(
+                activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', '')))
+              );
 
               if (store.state.weightEntryDialogState.isEditMode) {
                 store.dispatch(new EditEntryAction(activeEntry));
