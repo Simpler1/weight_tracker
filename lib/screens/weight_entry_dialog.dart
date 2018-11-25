@@ -98,6 +98,9 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
               Navigator.of(context).pop();
             },
             onSavePressed: () {
+              store.dispatch(new UpdateActiveWeightEntry(activeEntry..weight = double.tryParse(_weightController.text)));
+              store.dispatch(new UpdateActiveWeightEntry(activeEntry..percentBodyFat = double.tryParse(_fatController.text)));
+
               if (store.state.weightEntryDialogState.isEditMode) {
                 store.dispatch(new EditEntryAction(activeEntry));
               } else {
@@ -123,15 +126,17 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
                 ),
               ),
               new ListTile(
-                leading: Text('Weight in ${viewModel.unit}'),
+                leading: Text('Weight'),
                 title: weightTextFormField(
-                  viewModel.weightToDisplay.toStringAsFixed(1),
+                  viewModel.weightToDisplay,
+                  viewModel,
                 ),
               ),
               new ListTile(
-                leading: Text('% Body Fat'),
+                leading: Text('Body Fat'),
                 title: fatTextFormField(
-                  viewModel.percentFatToDisplay.toStringAsFixed(1),
+                  viewModel.percentFatToDisplay,
+                  viewModel,
                 ),
               ),
               new ListTile(
@@ -153,8 +158,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     );
   }
 
-  Widget weightTextFormField(String _value) {
-    _weightController.text = _value;
+  Widget weightTextFormField(double _value, DialogViewModel viewModel) {
+    _weightController.text = _value.toStringAsFixed(1);
     return TextFormField(
       autofocus: false,  // If this is set to true, the preselected text doesn't work
       focusNode: _weightFocusNode,
@@ -163,12 +168,24 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       inputFormatters: [
         _decimalFormatter,
       ],
-      // textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        suffixText: ' ' + viewModel.unit,
+      ),
+      textAlign: TextAlign.end,
+      onFieldSubmitted: (String value) {
+        print('Weight onFieldSubmitted ...');
+        FocusScope.of(context).requestFocus(_fatFocusNode);
+      },
+      // onEditingComplete: () {
+      //   print('Weight onEditingComplete ...');
+      //   viewModel.weightEntry..weight = double.tryParse(_weightController.text);
+      // },
+      textInputAction: TextInputAction.next,
     );
   }
 
-  Widget fatTextFormField(String _value) {
-    _fatController.text = _value;
+  Widget fatTextFormField(double _value, DialogViewModel viewModel) {
+    _fatController.text = _value.toStringAsFixed(1);
     return TextFormField(
       autofocus: false,
       focusNode: _fatFocusNode,
@@ -177,6 +194,18 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       inputFormatters: [
         _decimalFormatter,
       ],
+      decoration: InputDecoration(
+        suffixText: ' %',
+      ),
+      textAlign: TextAlign.end,
+      onFieldSubmitted: (String value) {
+        print('Fat onFieldSubmitted ...');
+        viewModel.onSavePressed();
+      },
+      // onEditingComplete: () {
+      //   print('Fat onEditingComplete ...');
+      //   viewModel.weightEntry..percentBodyFat = double.tryParse(_fatController.text);
+      // },
       // textInputAction: TextInputAction.next,
     );
   }
