@@ -48,6 +48,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   final _weightFocusNode = FocusNode();
   final _fatFocusNode = FocusNode();
   final _decimalFormatter = DecimalNumberTextInputFormatter(decimalPlaces: 1);
+  var weightChanged;
+  var fatChanged;
 
   @override
   void initState() {
@@ -56,26 +58,37 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       int _baseOffset = _weightController.text.length > 3 ? _weightController.text.length - 3 : 0;
       if (_weightFocusNode.hasFocus) {
         Timer(
-            const Duration(milliseconds: 1200),
-            () => // This is a hack to get the prehighlighting to work
-                _weightController.selection = TextSelection(
-                  baseOffset: _baseOffset,
-                  extentOffset: _weightController.text.length,
-                ));
+          const Duration(milliseconds: 1200),
+          () => // This is a hack to get the prehighlighting to work
+              _weightController.selection = TextSelection(
+                baseOffset: _baseOffset,
+                extentOffset: _weightController.text.length,
+              ),
+        );
+      } else if (weightChanged != null) {
+        weightChanged();
+        weightChanged = null;
       }
     });
     _fatFocusNode.addListener(() {
       int _baseOffset = _fatController.text.length > 3 ? _fatController.text.length - 3 : 0;
       if (_fatFocusNode.hasFocus) {
         Timer(
-            const Duration(milliseconds: 400),
-            () => // This is a hack to get the prehighlighting to work
-                _fatController.selection = TextSelection(
-                  baseOffset: _baseOffset,
-                  extentOffset: _fatController.text.length,
-                ));
+          const Duration(milliseconds: 400),
+          () => // This is a hack to get the prehighlighting to work
+              _fatController.selection = TextSelection(
+                baseOffset: _baseOffset,
+                extentOffset: _fatController.text.length,
+              ),
+        );
+      } else if (fatChanged != null) {
+        fatChanged();
+        fatChanged = null;
       }
     });
+    // _weightController.addListener(() {
+    //   print('_weightController listener  text:  ${_weightController.text}');
+    // });
   }
 
   @override
@@ -83,32 +96,37 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     return StoreConnector<ReduxState, DialogViewModel>(
       converter: (store) {
         WeightEntry activeEntry = store.state.weightEntryDialogState.activeEntry;
+        // updateWeight() {
+        // store.dispatch(UpdateActiveWeightEntry(
+        //     activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
+        // };
         return DialogViewModel(
-            weightEntry: activeEntry,
-            unit: store.state.unit,
-            isEditMode: store.state.weightEntryDialogState.isEditMode,
-            weightToDisplay: store.state.unit == "lbs"
-                ? activeEntry.weight
-                : double.parse((activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
-            percentFatToDisplay: activeEntry.percentBodyFat == null ? 24.3 : activeEntry.percentBodyFat,
-            onEntryChanged: (entry) => store.dispatch(UpdateActiveWeightEntry(entry)),
-            onDeletePressed: () {
-              store.dispatch(RemoveEntryAction(activeEntry));
-              Navigator.of(context).pop();
-            },
-            onSavePressed: () {
-              store.dispatch(UpdateActiveWeightEntry(
-                  activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
-              store.dispatch(UpdateActiveWeightEntry(
-                  activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', ''))));
+          weightEntry: activeEntry,
+          unit: store.state.unit,
+          isEditMode: store.state.weightEntryDialogState.isEditMode,
+          weightToDisplay: store.state.unit == "lbs"
+              ? activeEntry.weight
+              : double.parse((activeEntry.weight * LB_KG_RATIO).toStringAsFixed(1)),
+          percentFatToDisplay: activeEntry.percentBodyFat == null ? 24.3 : activeEntry.percentBodyFat,
+          onEntryChanged: (entry) => store.dispatch(UpdateActiveWeightEntry(entry)),
+          onDeletePressed: () {
+            store.dispatch(RemoveEntryAction(activeEntry));
+            Navigator.of(context).pop();
+          },
+          onSavePressed: () {
+            // store.dispatch(UpdateActiveWeightEntry(
+            //     activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
+            // store.dispatch(UpdateActiveWeightEntry(
+            //     activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', ''))));
 
-              if (store.state.weightEntryDialogState.isEditMode) {
-                store.dispatch(EditEntryAction(activeEntry));
-              } else {
-                store.dispatch(AddEntryAction(activeEntry));
-              }
-              Navigator.of(context).pop();
-            });
+            if (store.state.weightEntryDialogState.isEditMode) {
+              store.dispatch(EditEntryAction(activeEntry));
+            } else {
+              store.dispatch(AddEntryAction(activeEntry));
+            }
+            Navigator.of(context).pop();
+          },
+        );
       },
       builder: (context, viewModel) {
         if (!wasBuiltOnce) {
@@ -117,39 +135,51 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
         }
         return Scaffold(
           appBar: _createAppBar(context, viewModel),
-          body: Column(
-            children: <Widget>[
-              ListTile(
-                leading: Icon(Icons.today, color: Colors.grey[500]),
-                title: DateTimeItem(
-                  dateTime: viewModel.weightEntry.dateTime,
-                  onChanged: (dateTime) => viewModel.onEntryChanged(viewModel.weightEntry..dateTime = dateTime),
+          body: Form(
+            onChanged: () {
+              var w = double.tryParse(_weightController.text.replaceAll(',', ''));
+              if (viewModel.weightToDisplay != w) {
+                weightChanged = () => viewModel.onEntryChanged(viewModel.weightEntry..weight = w);
+              }
+              var f = double.tryParse(_fatController.text.replaceAll(',', ''));
+              if (viewModel.percentFatToDisplay != f) {
+                fatChanged = () => viewModel.onEntryChanged(viewModel.weightEntry..percentBodyFat = f);
+              }
+            },
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.today, color: Colors.grey[500]),
+                  title: DateTimeItem(
+                    dateTime: viewModel.weightEntry.dateTime,
+                    onChanged: (dateTime) => viewModel.onEntryChanged(viewModel.weightEntry..dateTime = dateTime),
+                  ),
                 ),
-              ),
-              weightTextFormField(
-                viewModel.weightToDisplay,
-                viewModel,
-              ),
-              const SizedBox(height: 12.0),
-              fatTextFormField(
-                viewModel.percentFatToDisplay,
-                viewModel,
-              ),
-              const SizedBox(height: 12.0),
-              TextField(
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  filled: true,
-                  icon: Icon(Icons.speaker_notes, color: Colors.grey[500]),
-                  labelText: 'Note',
-                  hintText: 'Did anything special happen yesterday?',
+                weightTextFormField(
+                  viewModel.weightToDisplay,
+                  viewModel,
                 ),
-                controller: _noteController,
-                onChanged: (value) {
-                  viewModel.onEntryChanged(viewModel.weightEntry..note = value);
-                },
-              ),
-            ],
+                const SizedBox(height: 12.0),
+                fatTextFormField(
+                  viewModel.percentFatToDisplay,
+                  viewModel,
+                ),
+                const SizedBox(height: 12.0),
+                TextField(
+                  decoration: InputDecoration(
+                    border: UnderlineInputBorder(),
+                    filled: true,
+                    icon: Icon(Icons.speaker_notes, color: Colors.grey[500]),
+                    labelText: 'Note',
+                    hintText: 'Did anything special happen yesterday?',
+                  ),
+                  controller: _noteController,
+                  onChanged: (value) {
+                    viewModel.onEntryChanged(viewModel.weightEntry..note = value);
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -180,7 +210,10 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
       },
       // onEditingComplete: () {
       //   print('Weight onEditingComplete ...');
-      //   viewModel.weightEntry..weight = double.tryParse(_weightController.text);
+      //   viewModel.weightEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''));
+      // },
+      // onSaved: (String value) {
+      //   print('Weight onSaved ...');
       // },
       textInputAction: TextInputAction.next,
     );
@@ -204,10 +237,10 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
         hintText: 'What is your percent body fat today?',
         labelText: '% Body Fat',
       ),
-      onFieldSubmitted: (String value) {
-        print('Fat onFieldSubmitted ...');
-        viewModel.onSavePressed();
-      },
+      // onFieldSubmitted: (String value) {
+      //   print('Fat onFieldSubmitted ...');
+      //   viewModel.onSavePressed();
+      // },
       // onEditingComplete: () {
       //   print('Fat onEditingComplete ...');
       //   viewModel.weightEntry..percentBodyFat = double.tryParse(_fatController.text);
