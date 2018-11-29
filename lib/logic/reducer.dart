@@ -13,7 +13,7 @@ ReduxState reduce(ReduxState state, action) {
   ProgressChartState progressChartState = _reduceChartState(state, action);
   double weightFromNotes = _reduceWeightFromNotes(state, action);
 
-  return new ReduxState(
+  return ReduxState(
     entries: entries,
     unit: unit,
     removedEntryState: removedEntryState,
@@ -70,8 +70,8 @@ RemovedEntryState _reduceRemovedEntryState(ReduxState reduxState, action) {
   if (action is AcceptEntryRemovalAction) {
     newState = newState.copyWith(hasEntryBeenRemoved: false);
   } else if (action is OnRemovedAction) {
-    newState = newState.copyWith(
-        hasEntryBeenRemoved: true, lastRemovedEntry: new WeightEntry.fromSnapshot(action.event.snapshot));
+    newState =
+        newState.copyWith(hasEntryBeenRemoved: true, lastRemovedEntry: WeightEntry.fromSnapshot(action.event.snapshot));
   }
   return newState;
 }
@@ -79,11 +79,15 @@ RemovedEntryState _reduceRemovedEntryState(ReduxState reduxState, action) {
 WeightEntryDialogReduxState _reduceWeightEntryDialogState(ReduxState reduxState, action) {
   WeightEntryDialogReduxState newState = reduxState.weightEntryDialogState;
   if (action is UpdateActiveWeightEntry) {
-    newState = newState.copyWith(activeEntry: new WeightEntry.copy(action.weightEntry));
+    newState = newState.copyWith(activeEntry: WeightEntry.copy(action.weightEntry));
   } else if (action is OpenAddEntryDialog) {
     newState = newState.copyWith(
-        activeEntry: new WeightEntry(
-            new DateTime.now(), reduxState.entries.isEmpty ? 160.0 : reduxState.entries.first.weight, null, null),
+        activeEntry: WeightEntry(
+          DateTime.now(),
+          reduxState.entries.isEmpty ? 160.0 : reduxState.entries.first.weight,
+          null,
+          reduxState.entries.isEmpty ? 20.0 : reduxState.entries.first.percentBodyFat,
+        ),
         isEditMode: false);
   } else if (action is OpenEditEntryDialog) {
     newState = newState.copyWith(activeEntry: action.weightEntry, isEditMode: true);
@@ -92,13 +96,13 @@ WeightEntryDialogReduxState _reduceWeightEntryDialogState(ReduxState reduxState,
 }
 
 List<WeightEntry> _reduceEntries(ReduxState state, action) {
-  List<WeightEntry> entries = new List.from(state.entries);
+  List<WeightEntry> entries = List.from(state.entries);
   if (action is OnAddedAction) {
     entries
-      ..add(new WeightEntry.fromSnapshot(action.event.snapshot))
+      ..add(WeightEntry.fromSnapshot(action.event.snapshot))
       ..sort((we1, we2) => we2.dateTime.compareTo(we1.dateTime));
   } else if (action is OnChangedAction) {
-    WeightEntry newValue = new WeightEntry.fromSnapshot(action.event.snapshot);
+    WeightEntry newValue = WeightEntry.fromSnapshot(action.event.snapshot);
     WeightEntry oldValue = entries.singleWhere((entry) => entry.key == newValue.key);
     entries
       ..[entries.indexOf(oldValue)] = newValue
@@ -117,13 +121,13 @@ ProgressChartState _reduceChartState(ReduxState state, action) {
   ProgressChartState newState = state.progressChartState;
   if (action is ChangeDaysToShowOnChart) {
     if (newState.lastFinishedDateTime == null ||
-        newState.lastFinishedDateTime.isBefore(new DateTime.now().subtract(const Duration(milliseconds: 10)))) {
+        newState.lastFinishedDateTime.isBefore(DateTime.now().subtract(const Duration(milliseconds: 10)))) {
       newState = newState.copyWith(daysToShow: action.daysToShow);
     }
   } else if (action is SnapShotDaysToShow) {
     newState = newState.copyWith(previousDaysToShow: newState.daysToShow);
   } else if (action is EndGestureOnProgressChart) {
-    newState = newState.copyWith(previousDaysToShow: newState.daysToShow, lastFinishedDateTime: new DateTime.now());
+    newState = newState.copyWith(previousDaysToShow: newState.daysToShow, lastFinishedDateTime: DateTime.now());
   }
   return newState;
 }

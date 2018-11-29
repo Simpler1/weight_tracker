@@ -15,7 +15,7 @@ class WeightEntry {
         dateTime = new DateTime.fromMillisecondsSinceEpoch(snapshot.value["date"]),
         weight = snapshot.value["weight"].toDouble(),
         note = snapshot.value["note"],
-        percentBodyFat = snapshot.value["percentBodyFat"];
+        percentBodyFat = snapshot.value["percentBodyFat"] == null ? null : snapshot.value["percentBodyFat"].toDouble();
 
   WeightEntry.copy(WeightEntry weightEntry)
       : key = weightEntry.key,
