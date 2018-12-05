@@ -27,61 +27,73 @@ ReduxState reduce(ReduxState state, action) {
 
 double _reduceWeightFromNotes(ReduxState state, action) {
   double weight = state.weightFromNotes;
+
   if (action is AddWeightFromNotes) {
-    weight = action.weight;
-  } else if (action is ConsumeWeightFromNotes) {
-    weight = null;
+    return action.weight;
+  }
+  if (action is ConsumeWeightFromNotes) {
+    return null;
   }
   return weight;
 }
 
 String _reduceUnit(ReduxState reduxState, action) {
   String unit = reduxState.unit;
+
   if (action is OnUnitChangedAction) {
-    unit = action.unit;
+    return action.unit;
   }
   return unit;
 }
 
 MainPageReduxState _reduceMainPageState(ReduxState reduxState, action) {
   MainPageReduxState newMainPageState = reduxState.mainPageState;
+
   if (action is AcceptEntryAddedAction) {
-    newMainPageState = newMainPageState.copyWith(hasEntryBeenAdded: false);
-  } else if (action is OnAddedAction) {
-    newMainPageState = newMainPageState.copyWith(hasEntryBeenAdded: true);
+    return newMainPageState.copyWith(hasEntryBeenAdded: false);
+  }
+  if (action is OnAddedAction) {
+    return newMainPageState.copyWith(hasEntryBeenAdded: true);
   }
   return newMainPageState;
 }
 
 FirebaseState _reduceFirebaseState(ReduxState reduxState, action) {
   FirebaseState newState = reduxState.firebaseState;
+
   if (action is InitAction) {
     FirebaseDatabase.instance.setPersistenceEnabled(true);
-  } else if (action is UserLoadedAction) {
-    newState = newState.copyWith(firebaseUser: action.firebaseUser);
-  } else if (action is AddDatabaseReferenceAction) {
-    newState = newState.copyWith(mainReference: action.databaseReference);
+  }
+  if (action is UserLoadedAction) {
+    return newState.copyWith(firebaseUser: action.firebaseUser);
+  }
+  if (action is AddDatabaseReferenceAction) {
+    return newState.copyWith(mainReference: action.databaseReference);
   }
   return newState;
 }
 
 RemovedEntryState _reduceRemovedEntryState(ReduxState reduxState, action) {
   RemovedEntryState newState = reduxState.removedEntryState;
+
   if (action is AcceptEntryRemovalAction) {
-    newState = newState.copyWith(hasEntryBeenRemoved: false);
-  } else if (action is OnRemovedAction) {
-    newState =
-        newState.copyWith(hasEntryBeenRemoved: true, lastRemovedEntry: WeightEntry.fromSnapshot(action.event.snapshot));
+    return newState.copyWith(hasEntryBeenRemoved: false);
+  }
+  if (action is OnRemovedAction) {
+    return newState.copyWith(
+        hasEntryBeenRemoved: true, lastRemovedEntry: WeightEntry.fromSnapshot(action.event.snapshot));
   }
   return newState;
 }
 
 WeightEntryDialogReduxState _reduceWeightEntryDialogState(ReduxState reduxState, action) {
   WeightEntryDialogReduxState newState = reduxState.weightEntryDialogState;
+
   if (action is UpdateActiveWeightEntry) {
-    newState = newState.copyWith(activeEntry: WeightEntry.copy(action.weightEntry));
-  } else if (action is OpenAddEntryDialog) {
-    newState = newState.copyWith(
+    return newState.copyWith(activeEntry: WeightEntry.copy(action.weightEntry));
+  }
+  if (action is OpenAddEntryDialog) {
+    return newState.copyWith(
         activeEntry: WeightEntry(
           DateTime.now(),
           reduxState.entries.isEmpty ? 160.0 : reduxState.entries.first.weight,
@@ -89,14 +101,16 @@ WeightEntryDialogReduxState _reduceWeightEntryDialogState(ReduxState reduxState,
           reduxState.entries.isEmpty ? 20.0 : reduxState.entries.first.percentBodyFat,
         ),
         isEditMode: false);
-  } else if (action is OpenEditEntryDialog) {
-    newState = newState.copyWith(activeEntry: action.weightEntry, isEditMode: true);
+  }
+  if (action is OpenEditEntryDialog) {
+    return newState.copyWith(activeEntry: action.weightEntry, isEditMode: true);
   }
   return newState;
 }
 
 List<WeightEntry> _reduceEntries(ReduxState state, action) {
   List<WeightEntry> entries = List.from(state.entries);
+
   if (action is OnAddedAction) {
     entries
       ..add(WeightEntry.fromSnapshot(action.event.snapshot))
@@ -119,15 +133,18 @@ List<WeightEntry> _reduceEntries(ReduxState state, action) {
 /// I don't check if values have sense (e.g. if they are greater than 0) - let it be ;)
 ProgressChartState _reduceChartState(ReduxState state, action) {
   ProgressChartState newState = state.progressChartState;
+
   if (action is ChangeDaysToShowOnChart) {
     if (newState.lastFinishedDateTime == null ||
         newState.lastFinishedDateTime.isBefore(DateTime.now().subtract(const Duration(milliseconds: 10)))) {
-      newState = newState.copyWith(daysToShow: action.daysToShow);
+      return newState.copyWith(daysToShow: action.daysToShow);
     }
-  } else if (action is SnapShotDaysToShow) {
-    newState = newState.copyWith(previousDaysToShow: newState.daysToShow);
-  } else if (action is EndGestureOnProgressChart) {
-    newState = newState.copyWith(previousDaysToShow: newState.daysToShow, lastFinishedDateTime: DateTime.now());
+  }
+  if (action is SnapShotDaysToShow) {
+    return newState.copyWith(previousDaysToShow: newState.daysToShow);
+  }
+  if (action is EndGestureOnProgressChart) {
+    return newState.copyWith(previousDaysToShow: newState.daysToShow, lastFinishedDateTime: DateTime.now());
   }
   return newState;
 }
