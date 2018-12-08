@@ -6,20 +6,20 @@ import 'package:weight_tracker/logic/redux_state.dart';
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, _ViewModel>(
+    return StoreConnector<ReduxState, _ViewModel>(
       converter: (store) {
-        return new _ViewModel(
+        return _ViewModel(
           user: store.state.firebaseState.firebaseUser,
         );
       },
       builder: (BuildContext context, _ViewModel vm) {
-        return new Scaffold(
-          appBar: new AppBar(
-            title: new Text("Profile"),
+        return Scaffold(
+          appBar: AppBar(
+            title: Text("Profile"),
           ),
-          body: new SingleChildScrollView(
-            child: new Center(
-              child: new Column(
+          body: SingleChildScrollView(
+            child: Center(
+              child: Column(
                 children: <Widget>[
                   _getUserIcon(vm),
                 ],
@@ -33,13 +33,13 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _getUserIcon(_ViewModel vm) {
     if (vm.user.isAnonymous) {
-      return new CircleAvatar(
-        backgroundImage: new AssetImage("assets/user_icon.png"),
+      return CircleAvatar(
+        backgroundImage: AssetImage("assets/user_icon.png"),
         radius: 36.0,
       );
     } else {
-      return new CircleAvatar(
-        backgroundImage: new NetworkImage(vm.user.photoUrl),
+      return CircleAvatar(
+        backgroundImage: NetworkImage(vm.user.photoUrl),
         radius: 36.0,
       );
     }

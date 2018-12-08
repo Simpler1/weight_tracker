@@ -30,10 +30,10 @@ class _StatisticsPageViewModel {
 class StatisticsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, _StatisticsPageViewModel>(
+    return StoreConnector<ReduxState, _StatisticsPageViewModel>(
       converter: (store) {
         String unit = store.state.unit;
-        List<WeightEntry> entries = new List();
+        List<WeightEntry> entries = List();
         store.state.entries.forEach((entry) {
           if (unit == "lbs") {
             entries.add(entry);
@@ -41,34 +41,25 @@ class StatisticsPage extends StatelessWidget {
             entries.add(entry.copyWith(weight: entry.weight * LB_KG_RATIO));
           }
         });
-        List<WeightEntry> last7daysEntries = entries
-            .where((entry) => entry.dateTime
-                .isAfter(new DateTime.now().subtract(new Duration(days: 7))))
-            .toList();
-        List<WeightEntry> last30daysEntries = entries
-            .where((entry) => entry.dateTime
-                .isAfter(new DateTime.now().subtract(new Duration(days: 30))))
-            .toList();
-        return new _StatisticsPageViewModel(
-          totalProgress: entries.isEmpty
-              ? 0.0
-              : (entries.first.weight - entries.last.weight),
+        List<WeightEntry> last7daysEntries =
+            entries.where((entry) => entry.dateTime.isAfter(DateTime.now().subtract(Duration(days: 7)))).toList();
+        List<WeightEntry> last30daysEntries =
+            entries.where((entry) => entry.dateTime.isAfter(DateTime.now().subtract(Duration(days: 30)))).toList();
+        return _StatisticsPageViewModel(
+          totalProgress: entries.isEmpty ? 0.0 : (entries.first.weight - entries.last.weight),
           currentWeight: entries.isEmpty ? 0.0 : entries.first.weight,
-          last7daysProgress: last7daysEntries.isEmpty
-              ? 0.0
-              : (last7daysEntries.first.weight - last7daysEntries.last.weight),
-          last30daysProgress: last30daysEntries.isEmpty
-              ? 0.0
-              : (last30daysEntries.first.weight -
-                  last30daysEntries.last.weight),
+          last7daysProgress:
+              last7daysEntries.isEmpty ? 0.0 : (last7daysEntries.first.weight - last7daysEntries.last.weight),
+          last30daysProgress:
+              last30daysEntries.isEmpty ? 0.0 : (last30daysEntries.first.weight - last30daysEntries.last.weight),
           entries: entries,
           unit: unit,
           openAddEntryDialog: () {
             if (last30daysEntries.isEmpty) {
-              store.dispatch(new OpenAddEntryDialog());
-              Navigator.of(context).push(new MaterialPageRoute(
+              store.dispatch(OpenAddEntryDialog());
+              Navigator.of(context).push(MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return new WeightEntryDialog();
+                  return WeightEntryDialog();
                 },
                 fullscreenDialog: true,
               ));
@@ -77,33 +68,31 @@ class StatisticsPage extends StatelessWidget {
         );
       },
       builder: (context, viewModel) {
-        return new ListView(
+        return ListView(
           children: <Widget>[
-            new GestureDetector(
+            GestureDetector(
               onTap: viewModel.openAddEntryDialog,
-              child: new _StatisticCardWrapper(
-                child: new Padding(
-                    padding: new EdgeInsets.all(8.0),
-                    child: new ProgressChart()),
+              child: _StatisticCardWrapper(
+                child: Padding(padding: EdgeInsets.all(8.0), child: ProgressChart()),
                 height: 250.0,
               ),
             ),
-            new _StatisticCard(
+            _StatisticCard(
               title: "Current weight",
               value: viewModel.currentWeight,
               unit: viewModel.unit,
             ),
-            new _StatisticCard(
+            _StatisticCard(
               title: "Progress done",
               value: viewModel.totalProgress,
               processNumberSymbol: true,
               unit: viewModel.unit,
             ),
-            new Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                new Expanded(
-                  child: new _StatisticCard(
+                Expanded(
+                  child: _StatisticCard(
                     title: "Last week",
                     value: viewModel.last7daysProgress,
                     textSizeFactor: 0.8,
@@ -111,8 +100,8 @@ class StatisticsPage extends StatelessWidget {
                     unit: viewModel.unit,
                   ),
                 ),
-                new Expanded(
-                  child: new _StatisticCard(
+                Expanded(
+                  child: _StatisticCard(
                     title: "Last month",
                     value: viewModel.last30daysProgress,
                     textSizeFactor: 0.8,
@@ -137,12 +126,12 @@ class _StatisticCardWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Row(
+    return Row(
       children: [
-        new Expanded(
-          child: new Container(
+        Expanded(
+          child: Container(
             height: height,
-            child: new Card(child: child),
+            child: Card(child: child),
           ),
         ),
       ],
@@ -157,42 +146,31 @@ class _StatisticCard extends StatelessWidget {
   final double textSizeFactor;
   final String unit;
 
-  _StatisticCard(
-      {this.title,
-      this.value,
-      this.unit,
-      this.processNumberSymbol = false,
-      this.textSizeFactor = 1.0});
+  _StatisticCard({this.title, this.value, this.unit, this.processNumberSymbol = false, this.textSizeFactor = 1.0});
 
   @override
   Widget build(BuildContext context) {
-    Color numberColor =
-        (processNumberSymbol && value > 0) ? Colors.red : Colors.green;
+    Color numberColor = (processNumberSymbol && value > 0) ? Colors.red : Colors.green;
     String numberSymbol = processNumberSymbol && value > 0 ? "+" : "";
-    return new _StatisticCardWrapper(
-      child: new Column(
+    return _StatisticCardWrapper(
+      child: Column(
         children: <Widget>[
-          new Expanded(
-            child: new Row(
+          Expanded(
+            child: Row(
               children: [
-                new Text(
+                Text(
                   numberSymbol + value.toStringAsFixed(1),
                   textScaleFactor: textSizeFactor,
-                  style: Theme.of(context)
-                      .textTheme
-                      .display2
-                      .copyWith(color: numberColor),
+                  style: Theme.of(context).textTheme.display2.copyWith(color: numberColor),
                 ),
-                new Padding(
-                    padding: new EdgeInsets.only(left: 5.0),
-                    child: new Text(unit)),
+                Padding(padding: EdgeInsets.only(left: 5.0), child: Text(unit)),
               ],
               mainAxisAlignment: MainAxisAlignment.center,
             ),
           ),
-          new Padding(
-            child: new Text(title),
-            padding: new EdgeInsets.only(bottom: 8.0),
+          Padding(
+            child: Text(title),
+            padding: EdgeInsets.only(bottom: 8.0),
           ),
         ],
       ),

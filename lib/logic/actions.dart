@@ -14,8 +14,7 @@ class AddDatabaseReferenceAction {
   AddDatabaseReferenceAction(this.databaseReference);
 }
 
-class GetSavedWeightNote {
-}
+class GetSavedWeightNote {}
 
 class AddWeightFromNotes {
   final double weight;
@@ -23,8 +22,7 @@ class AddWeightFromNotes {
   AddWeightFromNotes(this.weight);
 }
 
-class ConsumeWeightFromNotes {
-}
+class ConsumeWeightFromNotes {}
 
 class AddEntryAction {
   final WeightEntry weightEntry;
@@ -88,8 +86,7 @@ class UpdateActiveWeightEntry {
   UpdateActiveWeightEntry(this.weightEntry);
 }
 
-class OpenAddEntryDialog {
-}
+class OpenAddEntryDialog {}
 
 class OpenEditEntryDialog {
   final WeightEntry weightEntry;

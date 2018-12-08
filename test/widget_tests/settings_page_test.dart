@@ -8,22 +8,19 @@ import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/screens/settings_screen.dart';
 
 void main() {
-  final Store<ReduxState> store = new Store<ReduxState>(reduce,
-      initialState: new ReduxState(),
-      middleware: [middleware].toList());
+  final Store<ReduxState> store =
+      Store<ReduxState>(reduce, initialState: ReduxState(), middleware: [middleware].toList());
 
   pumpSettingWidget(WidgetTester tester) async {
-    await tester.pumpWidget(new StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          return new StoreProvider<ReduxState>(
+    await tester.pumpWidget(StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      return StoreProvider<ReduxState>(
         store: store,
-        child: new MaterialApp(home: new SettingsPage()),
+        child: MaterialApp(home: SettingsPage()),
       );
     }));
   }
 
-  testWidgets('SettingsPage has "Settings" in header',
-      (WidgetTester tester) async {
+  testWidgets('SettingsPage has "Settings" in header', (WidgetTester tester) async {
     await pumpSettingWidget(tester);
     expect(find.widgetWithText(AppBar, 'Settings'), findsOneWidget);
   });
@@ -33,8 +30,7 @@ void main() {
     expect(find.text('Unit'), findsOneWidget);
   });
 
-  testWidgets('Settings has spinner with kg and lbs',
-      (WidgetTester tester) async {
+  testWidgets('Settings has spinner with kg and lbs', (WidgetTester tester) async {
     await pumpSettingWidget(tester);
     expect(find.byKey(const Key('UnitDropdown')), findsOneWidget);
     expect(find.text('kg'), findsOneWidget);

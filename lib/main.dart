@@ -7,32 +7,30 @@ import 'package:weight_tracker/logic/reducer.dart';
 import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/screens/main_page.dart';
 
-void main() {
-  runApp(new MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final Store<ReduxState> store = new Store<ReduxState>(reduce,
-      initialState: new ReduxState(
+  final Store<ReduxState> store = Store<ReduxState>(reduce,
+      initialState: ReduxState(
           entries: [],
           unit: 'lbs',
-          removedEntryState: new RemovedEntryState(hasEntryBeenRemoved: false),
-          firebaseState: new FirebaseState(),
-          mainPageState: new MainPageReduxState(hasEntryBeenAdded: false),
-          weightEntryDialogState: new WeightEntryDialogReduxState()),
+          removedEntryState: RemovedEntryState(hasEntryBeenRemoved: false),
+          firebaseState: FirebaseState(),
+          mainPageState: MainPageReduxState(hasEntryBeenAdded: false),
+          weightEntryDialogState: WeightEntryDialogReduxState()),
       middleware: [middleware].toList());
 
   @override
   Widget build(BuildContext context) {
-    store.dispatch(new InitAction());
-    return new StoreProvider(
+    store.dispatch(InitAction());
+    return StoreProvider(
       store: store,
-      child: new MaterialApp(
+      child: MaterialApp(
         title: 'Weight Tracker',
-        theme: new ThemeData(
+        theme: ThemeData(
           primarySwatch: Colors.green,
         ),
-        home: new MainPage(title: "Weight Tracker"),
+        home: MainPage(title: "Weight Tracker"),
       ),
     );
   }

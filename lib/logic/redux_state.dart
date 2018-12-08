@@ -34,13 +34,12 @@ class ReduxState {
     WeightEntryDialogReduxState weightEntryDialogState,
     ProgressChartState progressChartState,
   }) {
-    return new ReduxState(
+    return ReduxState(
         firebaseState: firebaseState ?? this.firebaseState,
         entries: entries ?? this.entries,
         mainPageState: mainPageState ?? this.mainPageState,
         unit: unit ?? this.unit,
-        weightEntryDialogState:
-        weightEntryDialogState ?? this.weightEntryDialogState,
+        weightEntryDialogState: weightEntryDialogState ?? this.weightEntryDialogState,
         removedEntryState: removedEntryState ?? this.removedEntryState,
         progressChartState: progressChartState ?? this.progressChartState);
   }
@@ -52,12 +51,10 @@ class ProgressChartState {
   final int previousDaysToShow;
   final DateTime lastFinishedDateTime;
 
-  const ProgressChartState(
-      {this.daysToShow = 31, this.previousDaysToShow = 31, this.lastFinishedDateTime});
+  const ProgressChartState({this.daysToShow = 31, this.previousDaysToShow = 31, this.lastFinishedDateTime});
 
-  ProgressChartState copyWith(
-      {int daysToShow, int previousDaysToShow, DateTime lastFinishedDateTime}) {
-    return new ProgressChartState(
+  ProgressChartState copyWith({int daysToShow, int previousDaysToShow, DateTime lastFinishedDateTime}) {
+    return ProgressChartState(
       daysToShow: daysToShow ?? this.daysToShow,
       previousDaysToShow: previousDaysToShow ?? this.previousDaysToShow,
       lastFinishedDateTime: lastFinishedDateTime ?? this.lastFinishedDateTime,
@@ -70,14 +67,13 @@ class RemovedEntryState {
   final WeightEntry lastRemovedEntry;
   final bool hasEntryBeenRemoved; //in other words: should show snackbar?
 
-  const RemovedEntryState(
-      {this.lastRemovedEntry, this.hasEntryBeenRemoved = false});
+  const RemovedEntryState({this.lastRemovedEntry, this.hasEntryBeenRemoved = false});
 
   RemovedEntryState copyWith({
     WeightEntry lastRemovedEntry,
     bool hasEntryBeenRemoved,
   }) {
-    return new RemovedEntryState(
+    return RemovedEntryState(
         lastRemovedEntry: lastRemovedEntry ?? this.lastRemovedEntry,
         hasEntryBeenRemoved: hasEntryBeenRemoved ?? this.hasEntryBeenRemoved);
   }
@@ -94,9 +90,8 @@ class WeightEntryDialogReduxState {
     bool isEditMode,
     WeightEntry activeEntry,
   }) {
-    return new WeightEntryDialogReduxState(
-        isEditMode: isEditMode ?? this.isEditMode,
-        activeEntry: activeEntry ?? this.activeEntry);
+    return WeightEntryDialogReduxState(
+        isEditMode: isEditMode ?? this.isEditMode, activeEntry: activeEntry ?? this.activeEntry);
   }
 }
 
@@ -111,9 +106,8 @@ class FirebaseState {
     FirebaseUser firebaseUser,
     DatabaseReference mainReference,
   }) {
-    return new FirebaseState(
-        firebaseUser: firebaseUser ?? this.firebaseUser,
-        mainReference: mainReference ?? this.mainReference);
+    return FirebaseState(
+        firebaseUser: firebaseUser ?? this.firebaseUser, mainReference: mainReference ?? this.mainReference);
   }
 }
 
@@ -124,7 +118,6 @@ class MainPageReduxState {
   const MainPageReduxState({this.hasEntryBeenAdded = false});
 
   MainPageReduxState copyWith({bool hasEntryBeenAdded}) {
-    return new MainPageReduxState(
-        hasEntryBeenAdded: hasEntryBeenAdded ?? this.hasEntryBeenAdded);
+    return MainPageReduxState(hasEntryBeenAdded: hasEntryBeenAdded ?? this.hasEntryBeenAdded);
   }
 }

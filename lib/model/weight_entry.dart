@@ -12,7 +12,7 @@ class WeightEntry {
 
   WeightEntry.fromSnapshot(DataSnapshot snapshot)
       : key = snapshot.key,
-        dateTime = new DateTime.fromMillisecondsSinceEpoch(snapshot.value["date"]),
+        dateTime = DateTime.fromMillisecondsSinceEpoch(snapshot.value["date"]),
         weight = snapshot.value["weight"].toDouble(),
         note = snapshot.value["note"],
         percentBodyFat = snapshot.value["percentBodyFat"] == null ? null : snapshot.value["percentBodyFat"].toDouble();
@@ -20,7 +20,7 @@ class WeightEntry {
   WeightEntry.copy(WeightEntry weightEntry)
       : key = weightEntry.key,
         //copy datetime
-        dateTime = new DateTime.fromMillisecondsSinceEpoch(weightEntry.dateTime.millisecondsSinceEpoch),
+        dateTime = DateTime.fromMillisecondsSinceEpoch(weightEntry.dateTime.millisecondsSinceEpoch),
         weight = weightEntry.weight,
         note = weightEntry.note,
         percentBodyFat = weightEntry.percentBodyFat;
@@ -28,7 +28,7 @@ class WeightEntry {
   WeightEntry._internal(this.key, this.dateTime, this.weight, this.note, this.percentBodyFat);
 
   WeightEntry copyWith({String key, DateTime dateTime, double weight, String note}) {
-    return new WeightEntry._internal(
+    return WeightEntry._internal(
       key ?? this.key,
       dateTime ?? this.dateTime,
       weight ?? this.weight,

@@ -12,33 +12,30 @@ class WeightListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double displayWeight =
-        unit == "lbs" ? weightEntry.weight : weightEntry.weight * LB_KG_RATIO;
-    double displayDifference =
-        unit == "lbs" ? weightDifference : weightDifference * LB_KG_RATIO;
-    return new Padding(
-      padding: new EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
-      child: new Row(
+    double displayWeight = unit == "lbs" ? weightEntry.weight : weightEntry.weight * LB_KG_RATIO;
+    double displayDifference = unit == "lbs" ? weightDifference : weightDifference * LB_KG_RATIO;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          new Expanded(
-            child: new Row(
+          Expanded(
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                new Column(
+                Column(
                   children: [
-                    new Text(
-                      new DateFormat.MMMEd().format(weightEntry.dateTime),
+                    Text(
+                      DateFormat.MMMEd().format(weightEntry.dateTime),
                       textScaleFactor: 0.9,
                       textAlign: TextAlign.left,
                     ),
-                    new Text(
-                      new TimeOfDay.fromDateTime(weightEntry.dateTime)
-                          .format(context),
+                    Text(
+                      TimeOfDay.fromDateTime(weightEntry.dateTime).format(context),
                       textScaleFactor: 0.8,
                       textAlign: TextAlign.right,
-                      style: new TextStyle(
+                      style: TextStyle(
                         color: Colors.grey,
                       ),
                     ),
@@ -47,12 +44,12 @@ class WeightListItem extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                 ),
                 (weightEntry.note == null || weightEntry.note.isEmpty)
-                    ? new Container(
+                    ? Container(
                         height: 0.0,
                       )
-                    : new Padding(
-                        padding: new EdgeInsets.only(left: 4.0),
-                        child: new Icon(
+                    : Padding(
+                        padding: EdgeInsets.only(left: 4.0),
+                        child: Icon(
                           Icons.speaker_notes,
                           color: Colors.grey[300],
                           size: 16.0,
@@ -61,16 +58,16 @@ class WeightListItem extends StatelessWidget {
               ],
             ),
           ),
-          new Text(
+          Text(
             displayWeight.toStringAsFixed(1),
             textScaleFactor: 2.0,
             textAlign: TextAlign.center,
           ),
-          new Expanded(
-            child: new Row(
+          Expanded(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                new Text(
+                Text(
                   _differenceText(displayDifference),
                   textScaleFactor: 1.6,
                   textAlign: TextAlign.right,

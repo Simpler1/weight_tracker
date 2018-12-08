@@ -41,7 +41,7 @@ List<RangeOption> rangeOptions = [
 class ProgressChart extends StatefulWidget {
   @override
   ProgressChartState createState() {
-    return new ProgressChartState();
+    return ProgressChartState();
   }
 }
 
@@ -50,64 +50,59 @@ class ProgressChartState extends State<ProgressChart> {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, ProgressChartViewModel>(
+    return StoreConnector<ReduxState, ProgressChartViewModel>(
       converter: (store) {
         int daysToShow = store.state.progressChartState.daysToShow;
-        return new ProgressChartViewModel(
-          entriesToShow: utils.prepareEntryList(
-              store.state.entries, new DateTime.now(), daysToShow),
+        return ProgressChartViewModel(
+          entriesToShow: utils.prepareEntryList(store.state.entries, DateTime.now(), daysToShow),
           daysToShow: daysToShow,
           previousDaysToShow: store.state.progressChartState.previousDaysToShow,
-          snapShotDaysToShow: () => store.dispatch(new SnapShotDaysToShow()),
-          changeDaysToShow: (days) =>
-              store.dispatch(new ChangeDaysToShowOnChart(days)),
-          endGesture: () => store.dispatch(new EndGestureOnProgressChart()),
+          snapShotDaysToShow: () => store.dispatch(SnapShotDaysToShow()),
+          changeDaysToShow: (days) => store.dispatch(ChangeDaysToShowOnChart(days)),
+          endGesture: () => store.dispatch(EndGestureOnProgressChart()),
           unit: store.state.unit,
         );
       },
       builder: (BuildContext context, ProgressChartViewModel viewModel) {
-        return new Column(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            new Expanded(
-              child: new GestureDetector(
+            Expanded(
+              child: GestureDetector(
                 onScaleStart: (details) => viewModel.snapShotDaysToShow(),
                 onScaleUpdate: (ScaleUpdateDetails scaleDetails) {
-                  int newNumberOfDays =
-                      (viewModel.previousDaysToShow / scaleDetails.scale)
-                          .round();
+                  int newNumberOfDays = (viewModel.previousDaysToShow / scaleDetails.scale).round();
                   if (newNumberOfDays >= 8) {
                     viewModel.changeDaysToShow(newNumberOfDays);
                   }
                 },
                 onScaleEnd: (details) => viewModel.endGesture(),
-                child: new CustomPaint(
-                  painter: new ChartPainter(
-                    utils.prepareEntryList(viewModel.entriesToShow,
-                        new DateTime.now(), viewModel.daysToShow),
+                child: CustomPaint(
+                  painter: ChartPainter(
+                    utils.prepareEntryList(viewModel.entriesToShow, DateTime.now(), viewModel.daysToShow),
                     viewModel.daysToShow,
                     viewModel.unit == "kg",
                   ),
                 ),
               ),
             ),
-            new Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                new Padding(
+                Padding(
                   padding: const EdgeInsets.only(right: 8.0, bottom: 15.0),
-                  child: new Text(
+                  child: Text(
                     "Show entries from last",
-                    style: new TextStyle(color: Colors.grey[500]),
+                    style: TextStyle(color: Colors.grey[500]),
                   ),
                 ),
-                new DropdownButton<RangeOption>(
+                DropdownButton<RangeOption>(
                   value: rangeOption,
                   items: rangeOptions
-                      .map((option) => new DropdownMenuItem<RangeOption>(
-                            child: new Text(option.text),
+                      .map((option) => DropdownMenuItem<RangeOption>(
+                            child: Text(option.text),
                             value: option,
                           ))
                       .toList(),
@@ -155,12 +150,10 @@ class ChartPainter extends CustomPainter {
     drawingHeight = topOffsetEnd;
 
     if (entries.isEmpty) {
-      _drawParagraphInsteadOfChart(
-          canvas, size, "Add your current weight to see history");
+      _drawParagraphInsteadOfChart(canvas, size, "Add your current weight to see history");
     } else {
       Tuple2<int, int> borderLineValues = _getMinAndMaxValues(entries, isKg);
-      _drawHorizontalLinesAndLabels(
-          canvas, size, borderLineValues.item1, borderLineValues.item2);
+      _drawHorizontalLinesAndLabels(canvas, size, borderLineValues.item1, borderLineValues.item2);
       _drawBottomLabels(canvas, size);
 
       _drawLines(canvas, borderLineValues.item1, borderLineValues.item2, isKg);
@@ -171,32 +164,23 @@ class ChartPainter extends CustomPainter {
   bool shouldRepaint(ChartPainter old) => true;
 
   ///draws actual chart
-  void _drawLines(
-      ui.Canvas canvas, int minLineValue, int maxLineValue, bool isKg) {
-    final paint = new Paint()
+  void _drawLines(ui.Canvas canvas, int minLineValue, int maxLineValue, bool isKg) {
+    final paint = Paint()
       ..color = Colors.blue[400]
       ..strokeWidth = 3.0;
-    DateTime beginningOfChart =
-        utils.getStartDateOfChart(new DateTime.now(), numberOfDays);
+    DateTime beginningOfChart = utils.getStartDateOfChart(DateTime.now(), numberOfDays);
     for (int i = 0; i < entries.length - 1; i++) {
-      Offset startEntryOffset = _getEntryOffset(
-          entries[i], beginningOfChart, minLineValue, maxLineValue, isKg);
-      Offset endEntryOffset = _getEntryOffset(
-          entries[i + 1], beginningOfChart, minLineValue, maxLineValue, isKg);
+      Offset startEntryOffset = _getEntryOffset(entries[i], beginningOfChart, minLineValue, maxLineValue, isKg);
+      Offset endEntryOffset = _getEntryOffset(entries[i + 1], beginningOfChart, minLineValue, maxLineValue, isKg);
       canvas.drawLine(startEntryOffset, endEntryOffset, paint);
       canvas.drawCircle(endEntryOffset, 3.0, paint);
     }
-    canvas.drawCircle(
-        _getEntryOffset(
-            entries.first, beginningOfChart, minLineValue, maxLineValue, isKg),
-        5.0,
-        paint);
+    canvas.drawCircle(_getEntryOffset(entries.first, beginningOfChart, minLineValue, maxLineValue, isKg), 5.0, paint);
   }
 
   /// Draws horizontal lines and labels informing about weight values attached to those lines
-  void _drawHorizontalLinesAndLabels(
-      Canvas canvas, Size size, int minLineValue, int maxLineValue) {
-    final paint = new Paint()..color = Colors.grey[300];
+  void _drawHorizontalLinesAndLabels(Canvas canvas, Size size, int minLineValue, int maxLineValue) {
+    final paint = Paint()..color = Colors.grey[300];
     int lineStep = _calculateHorizontalLineStep(maxLineValue, minLineValue);
     double offsetStep = _calculateHorizontalOffsetStep;
     for (int line = 0; line < NUMBER_OF_HORIZONTAL_LINES; line++) {
@@ -206,22 +190,19 @@ class ChartPainter extends CustomPainter {
     }
   }
 
-  void _drawHorizontalLine(
-      ui.Canvas canvas, double yOffset, ui.Size size, ui.Paint paint) {
+  void _drawHorizontalLine(ui.Canvas canvas, double yOffset, ui.Size size, ui.Paint paint) {
     canvas.drawLine(
-      new Offset(leftOffsetStart, 5 + yOffset),
-      new Offset(size.width, 5 + yOffset),
+      Offset(leftOffsetStart, 5 + yOffset),
+      Offset(size.width, 5 + yOffset),
       paint,
     );
   }
 
-  void _drawHorizontalLabel(int maxLineValue, int line, int lineStep,
-      ui.Canvas canvas, double yOffset) {
-    ui.Paragraph paragraph =
-        _buildParagraphForLeftLabel(maxLineValue, line, lineStep);
+  void _drawHorizontalLabel(int maxLineValue, int line, int lineStep, ui.Canvas canvas, double yOffset) {
+    ui.Paragraph paragraph = _buildParagraphForLeftLabel(maxLineValue, line, lineStep);
     canvas.drawParagraph(
       paragraph,
-      new Offset(0.0, yOffset),
+      Offset(0.0, yOffset),
     );
   }
 
@@ -248,36 +229,31 @@ class ChartPainter extends CustomPainter {
       ui.Paragraph paragraph = _buildParagraphForBottomLabel(daysFromStart);
       canvas.drawParagraph(
         paragraph,
-        new Offset(offsetX - 50.0, 10.0 + drawingHeight),
+        Offset(offsetX - 50.0, 10.0 + drawingHeight),
       );
     }
   }
 
   ///Builds paragraph for label placed on the bottom (dates)
   ui.Paragraph _buildParagraphForBottomLabel(int daysFromStart) {
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-        new ui.ParagraphStyle(fontSize: 10.0, textAlign: TextAlign.right))
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
-      ..addText(new DateFormat('d MMM').format(new DateTime.now()
-          .subtract(new Duration(days: numberOfDays - daysFromStart))));
-    final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: 50.0));
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(fontSize: 10.0, textAlign: TextAlign.right))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
+      ..addText(DateFormat('d MMM').format(DateTime.now().subtract(Duration(days: numberOfDays - daysFromStart))));
+    final ui.Paragraph paragraph = builder.build()..layout(ui.ParagraphConstraints(width: 50.0));
     return paragraph;
   }
 
   ///Builds text paragraph for label placed on the left side of a chart (weights)
-  ui.Paragraph _buildParagraphForLeftLabel(
-      int maxLineValue, int line, int lineStep) {
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-      new ui.ParagraphStyle(
+  ui.Paragraph _buildParagraphForLeftLabel(int maxLineValue, int line, int lineStep) {
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+      ui.ParagraphStyle(
         fontSize: 10.0,
         textAlign: TextAlign.right,
       ),
     )
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText((maxLineValue - line * lineStep).toString());
-    final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: leftOffsetStart - 4));
+    final ui.Paragraph paragraph = builder.build()..layout(ui.ParagraphConstraints(width: leftOffsetStart - 4));
     return paragraph;
   }
 
@@ -299,43 +275,38 @@ class ChartPainter extends CustomPainter {
     } else {
       maxLineValue = maxWeight.ceil();
       int difference = maxLineValue - minWeight.floor();
-      int toSubtract = (NUMBER_OF_HORIZONTAL_LINES - 1) -
-          (difference % (NUMBER_OF_HORIZONTAL_LINES - 1));
+      int toSubtract = (NUMBER_OF_HORIZONTAL_LINES - 1) - (difference % (NUMBER_OF_HORIZONTAL_LINES - 1));
       if (toSubtract == NUMBER_OF_HORIZONTAL_LINES - 1) {
         toSubtract = 0;
       }
       minLineValue = minWeight.floor() - toSubtract;
     }
-    return new Tuple2(minLineValue, maxLineValue);
+    return Tuple2(minLineValue, maxLineValue);
   }
 
   /// Calculates offset at which given entry should be painted
-  Offset _getEntryOffset(WeightEntry entry, DateTime beginningOfChart,
-      int minLineValue, int maxLineValue, bool isKg) {
+  Offset _getEntryOffset(WeightEntry entry, DateTime beginningOfChart, int minLineValue, int maxLineValue, bool isKg) {
     double entryWeightToShow = isKg ? entry.weight * LB_KG_RATIO : entry.weight;
     int daysFromBeginning = entry.dateTime.difference(beginningOfChart).inDays;
     double relativeXposition = daysFromBeginning / (numberOfDays - 1);
     double xOffset = leftOffsetStart + relativeXposition * drawingWidth;
-    double relativeYposition =
-        (entryWeightToShow - minLineValue) / (maxLineValue - minLineValue);
+    double relativeYposition = (entryWeightToShow - minLineValue) / (maxLineValue - minLineValue);
     double yOffset = 5 + drawingHeight - relativeYposition * drawingHeight;
-    return new Offset(xOffset, yOffset);
+    return Offset(xOffset, yOffset);
   }
 
   _drawParagraphInsteadOfChart(ui.Canvas canvas, ui.Size size, String text) {
     double fontSize = 14.0;
-    ui.ParagraphBuilder builder = new ui.ParagraphBuilder(
-      new ui.ParagraphStyle(
+    ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+      ui.ParagraphStyle(
         fontSize: fontSize,
         textAlign: TextAlign.center,
       ),
     )
-      ..pushStyle(new ui.TextStyle(color: Colors.black))
+      ..pushStyle(ui.TextStyle(color: Colors.black))
       ..addText(text);
-    final ui.Paragraph paragraph = builder.build()
-      ..layout(new ui.ParagraphConstraints(width: size.width));
+    final ui.Paragraph paragraph = builder.build()..layout(ui.ParagraphConstraints(width: size.width));
 
-    canvas.drawParagraph(
-        paragraph, new Offset(0.0, size.height / 2 - fontSize));
+    canvas.drawParagraph(paragraph, Offset(0.0, size.height / 2 - fontSize));
   }
 }

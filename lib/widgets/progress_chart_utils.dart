@@ -14,12 +14,12 @@ List<WeightEntry> prepareEntryList(List<WeightEntry> initialEntries, DateTime no
 }
 
 DateTime getStartDateOfChart(DateTime now, int daysToShow) {
-  DateTime beginningOfChart = now.subtract(new Duration(days: daysToShow - 1, hours: now.hour, minutes: now.minute));
+  DateTime beginningOfChart = now.subtract(Duration(days: daysToShow - 1, hours: now.hour, minutes: now.minute));
   return beginningOfChart;
 }
 
 DateTime _copyDateWithoutTime(DateTime dateTime) {
-  return new DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
+  return DateTime.utc(dateTime.year, dateTime.month, dateTime.day);
 }
 
 /// Adds missing entry at the start of a chart.
@@ -32,7 +32,7 @@ void _addFakeEntryOnTheChartBeginning(
   List<WeightEntry> entriesNotInChart = initialEntries.where((entry) => !entries.contains(entry)).toList();
   WeightEntry firstEntryAfterBeginning = entries.last;
   WeightEntry lastEntryBeforeBeginning = entriesNotInChart.first;
-  WeightEntry fakeEntry = new WeightEntry(beginningDate,
+  WeightEntry fakeEntry = WeightEntry(beginningDate,
       _calculateWeightOnBeginningDate(lastEntryBeforeBeginning, firstEntryAfterBeginning, beginningDate), null, null);
   entries.add(fakeEntry);
 }

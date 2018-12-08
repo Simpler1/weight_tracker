@@ -5,11 +5,11 @@ import 'package:weight_tracker/widgets/progress_chart_utils.dart' as utils;
 void main() {
   test('general filtring list test', () {
     //given
-    DateTime now = new DateTime.utc(2017, 1, 1, 8, 0);
-    WeightEntry entry1 = new WeightEntry(now, 160.0, null, null);
-    WeightEntry entry2 = new WeightEntry(now.subtract(new Duration(days: 6)), 160.0, null, null);
-    WeightEntry entry3 = new WeightEntry(now.subtract(new Duration(days: 7)), 160.0, null, null);
-    WeightEntry entry4 = new WeightEntry(now.subtract(new Duration(days: 8)), 160.0, null, null);
+    DateTime now = DateTime.utc(2017, 1, 1, 8, 0);
+    WeightEntry entry1 = WeightEntry(now, 160.0, null, null);
+    WeightEntry entry2 = WeightEntry(now.subtract(Duration(days: 6)), 160.0, null, null);
+    WeightEntry entry3 = WeightEntry(now.subtract(Duration(days: 7)), 160.0, null, null);
+    WeightEntry entry4 = WeightEntry(now.subtract(Duration(days: 8)), 160.0, null, null);
     int daysToShow = 7;
     List<WeightEntry> entries = [entry1, entry2, entry3, entry4];
     //when
@@ -24,9 +24,9 @@ void main() {
   test('adds fake weight entry', () {
     //given
     int daysToShow = 2;
-    DateTime now = new DateTime.utc(2017, 10, 10, 8, 0);
-    WeightEntry firstEntryAfterBorder = new WeightEntry(now, 160.0, null, null);
-    WeightEntry lastEntryBeforeBorder = new WeightEntry(now.subtract(new Duration(days: 2)), 180.0, null, null);
+    DateTime now = DateTime.utc(2017, 10, 10, 8, 0);
+    WeightEntry firstEntryAfterBorder = WeightEntry(now, 160.0, null, null);
+    WeightEntry lastEntryBeforeBorder = WeightEntry(now.subtract(Duration(days: 2)), 180.0, null, null);
     List<WeightEntry> entries = [firstEntryAfterBorder, lastEntryBeforeBorder];
     //when
     List<WeightEntry> newEntries = utils.prepareEntryList(entries, now, daysToShow);

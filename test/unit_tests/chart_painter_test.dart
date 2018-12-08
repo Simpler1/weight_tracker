@@ -10,9 +10,9 @@ class MockCanvas extends Mock implements Canvas {}
 void main() {
   test("Given empty list ChartPainter draws only Paragraph", () {
     //given
-    MockCanvas mockCanvas = new MockCanvas();
-    Size size = new Size(600.0, 600.0);
-    ChartPainter chartPainter = new ChartPainter([], 30, true);
+    MockCanvas mockCanvas = MockCanvas();
+    Size size = Size(600.0, 600.0);
+    ChartPainter chartPainter = ChartPainter([], 30, true);
     //when
     chartPainter.paint(mockCanvas, size);
     //then
@@ -24,10 +24,10 @@ void main() {
   ///There are 5 horizontal lines
   test("Given one value, ChartPainter draws 5 lines and 1 point", () {
     //given
-    MockCanvas mockCanvas = new MockCanvas();
-    Size size = new Size(600.0, 600.0);
-    WeightEntry weightEntry = new WeightEntry(new DateTime.now(), 160.0, null, null);
-    ChartPainter chartPainter = new ChartPainter([weightEntry], 30, true);
+    MockCanvas mockCanvas = MockCanvas();
+    Size size = Size(600.0, 600.0);
+    WeightEntry weightEntry = WeightEntry(DateTime.now(), 160.0, null, null);
+    ChartPainter chartPainter = ChartPainter([weightEntry], 30, true);
     //when
     chartPainter.paint(mockCanvas, size);
     //then
@@ -37,12 +37,12 @@ void main() {
 
   test("Given two values, ChartPainter draws 6 lines and 2 points", () {
     //given
-    MockCanvas mockCanvas = new MockCanvas();
-    Size size = new Size(600.0, 600.0);
-    DateTime now = new DateTime.now();
-    WeightEntry weightEntry1 = new WeightEntry(now, 160.0, null, null);
-    WeightEntry weightEntry2 = new WeightEntry(now.subtract(const Duration(days: 1)), 160.0, null, null);
-    ChartPainter chartPainter = new ChartPainter([weightEntry1, weightEntry2], 30, true);
+    MockCanvas mockCanvas = MockCanvas();
+    Size size = Size(600.0, 600.0);
+    DateTime now = DateTime.now();
+    WeightEntry weightEntry1 = WeightEntry(now, 160.0, null, null);
+    WeightEntry weightEntry2 = WeightEntry(now.subtract(const Duration(days: 1)), 160.0, null, null);
+    ChartPainter chartPainter = ChartPainter([weightEntry1, weightEntry2], 30, true);
     //when
     chartPainter.paint(mockCanvas, size);
     //then

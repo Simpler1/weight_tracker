@@ -34,33 +34,31 @@ class HistoryPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, HistoryPageViewModel>(
+    return StoreConnector<ReduxState, HistoryPageViewModel>(
       converter: (store) {
-        return new HistoryPageViewModel(
+        return HistoryPageViewModel(
           entries: store.state.entries,
           openEditDialog: (entry) {
-            store.dispatch(new OpenEditEntryDialog(entry));
-            Navigator.of(context).push(new MaterialPageRoute(
+            store.dispatch(OpenEditEntryDialog(entry));
+            Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) {
-                return new WeightEntryDialog();
+                return WeightEntryDialog();
               },
               fullscreenDialog: true,
             ));
           },
-          hasEntryBeenRemoved: store.state.removedEntryState
-              .hasEntryBeenRemoved,
-          acceptEntryRemoved: () =>
-              store.dispatch(new AcceptEntryRemovalAction()),
-          undoEntryRemoval: () => store.dispatch(new UndoRemovalAction()),
+          hasEntryBeenRemoved: store.state.removedEntryState.hasEntryBeenRemoved,
+          acceptEntryRemoved: () => store.dispatch(AcceptEntryRemovalAction()),
+          undoEntryRemoval: () => store.dispatch(UndoRemovalAction()),
           unit: store.state.unit,
         );
       },
       builder: (context, viewModel) {
         if (viewModel.hasEntryBeenRemoved) {
-          new Future<Null>.delayed(Duration.zero, () {
-            Scaffold.of(context).showSnackBar(new SnackBar(
-              content: new Text("Entry deleted."),
-              action: new SnackBarAction(
+          Future<Null>.delayed(Duration.zero, () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+              content: Text("Entry deleted."),
+              action: SnackBarAction(
                 label: "UNDO",
                 onPressed: () => viewModel.undoEntryRemoval(),
               ),
@@ -69,24 +67,21 @@ class HistoryPage extends StatelessWidget {
           });
         }
         if (viewModel.entries.isEmpty) {
-          return new Center(
-            child: new Text("Add your weight to see history"),
+          return Center(
+            child: Text("Add your weight to see history"),
           );
         } else {
-          return new ListView.builder(
+          return ListView.builder(
             shrinkWrap: true,
             itemCount: viewModel.entries.length,
             itemBuilder: (buildContext, index) {
               //calculating difference
               double difference = index == viewModel.entries.length - 1
                   ? 0.0
-                  : viewModel.entries[index].weight -
-                  viewModel.entries[index + 1].weight;
-              return new InkWell(
-                  onTap: () =>
-                      viewModel.openEditDialog(viewModel.entries[index]),
-                  child: new WeightListItem(
-                      viewModel.entries[index], difference, viewModel.unit));
+                  : viewModel.entries[index].weight - viewModel.entries[index + 1].weight;
+              return InkWell(
+                  onTap: () => viewModel.openEditDialog(viewModel.entries[index]),
+                  child: WeightListItem(viewModel.entries[index], difference, viewModel.unit));
             },
           );
         }

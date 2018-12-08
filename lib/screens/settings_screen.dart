@@ -15,33 +15,32 @@ class SettingsPageViewModel {
 class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, SettingsPageViewModel>(
-        converter: (store) {
-      return new SettingsPageViewModel(
+    return StoreConnector<ReduxState, SettingsPageViewModel>(converter: (store) {
+      return SettingsPageViewModel(
         unit: store.state.unit,
-        onUnitChanged: (newUnit) => store.dispatch(new SetUnitAction(newUnit)),
+        onUnitChanged: (newUnit) => store.dispatch(SetUnitAction(newUnit)),
       );
     }, builder: (context, viewModel) {
-      return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Settings"),
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("Settings"),
         ),
-        body: new Padding(
-          padding: new EdgeInsets.all(16.0),
-          child: new Row(
+        body: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Row(
             children: <Widget>[
-              new Expanded(
-                  child: new Text(
+              Expanded(
+                  child: Text(
                 "Unit",
                 style: Theme.of(context).textTheme.headline,
               )),
-              new DropdownButton<String>(
+              DropdownButton<String>(
                 key: const Key('UnitDropdown'),
                 value: viewModel.unit,
                 items: <String>["lbs", "kg"].map((String value) {
-                  return new DropdownMenuItem<String>(
+                  return DropdownMenuItem<String>(
                     value: value,
-                    child: new Text(value),
+                    child: Text(value),
                   );
                 }).toList(),
                 onChanged: (newUnit) => viewModel.onUnitChanged(newUnit),

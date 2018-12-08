@@ -30,20 +30,19 @@ class MainPage extends StatefulWidget {
 
   @override
   State<MainPage> createState() {
-    return new MainPageState();
+    return MainPageState();
   }
 }
 
-class MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
   ScrollController _scrollViewController;
   TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _scrollViewController = new ScrollController();
-    _tabController = new TabController(vsync: this, length: 2);
+    _scrollViewController = ScrollController();
+    _tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -55,20 +54,17 @@ class MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    return new StoreConnector<ReduxState, MainPageViewModel>(
+    return StoreConnector<ReduxState, MainPageViewModel>(
       converter: (store) {
-        return new MainPageViewModel(
-          defaultWeight: store.state.entries.isEmpty
-              ? 60.0
-              : store.state.entries.first.weight,
+        return MainPageViewModel(
+          defaultWeight: store.state.entries.isEmpty ? 60.0 : store.state.entries.first.weight,
           hasEntryBeenAdded: store.state.mainPageState.hasEntryBeenAdded,
-          acceptEntryAddedCallback: () =>
-              store.dispatch(new AcceptEntryAddedAction()),
+          acceptEntryAddedCallback: () => store.dispatch(AcceptEntryAddedAction()),
           openAddEntryDialog: () {
-            store.dispatch(new OpenAddEntryDialog());
-            Navigator.of(context).push(new MaterialPageRoute(
+            store.dispatch(OpenAddEntryDialog());
+            Navigator.of(context).push(MaterialPageRoute(
               builder: (BuildContext context) {
-                return new WeightEntryDialog();
+                return WeightEntryDialog();
               },
               fullscreenDialog: true,
             ));
@@ -77,35 +73,34 @@ class MainPageState extends State<MainPage>
         );
       },
       onInit: (store) {
-        store.dispatch(new GetSavedWeightNote());
+        store.dispatch(GetSavedWeightNote());
       },
       builder: (context, viewModel) {
         if (viewModel.hasEntryBeenAdded) {
           _scrollToTop();
           viewModel.acceptEntryAddedCallback();
         }
-        return new Scaffold(
-          body: new NestedScrollView(
+        return Scaffold(
+          body: NestedScrollView(
             controller: _scrollViewController,
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
-                new SliverAppBar(
-                  title: new Text(widget.title),
+                SliverAppBar(
+                  title: Text(widget.title),
                   // pinned: true,
                   floating: true,
                   forceElevated: innerBoxIsScrolled,
-                  bottom: new TabBar(
+                  bottom: TabBar(
                     tabs: <Tab>[
-                      new Tab(
-                        key: new Key('StatisticsTab'),
+                      Tab(
+                        key: Key('StatisticsTab'),
                         text: "STATISTICS",
-                        icon: new Icon(Icons.show_chart),
+                        icon: Icon(Icons.show_chart),
                       ),
-                      new Tab(
-                        key: new Key('HistoryTab'),
+                      Tab(
+                        key: Key('HistoryTab'),
                         text: "HISTORY",
-                        icon: new Icon(Icons.history),
+                        icon: Icon(Icons.history),
                       ),
                     ],
                     controller: _tabController,
@@ -114,18 +109,18 @@ class MainPageState extends State<MainPage>
                 ),
               ];
             },
-            body: new TabBarView(
+            body: TabBarView(
               children: <Widget>[
-                new StatisticsPage(),
-                new HistoryPage(),
+                StatisticsPage(),
+                HistoryPage(),
               ],
               controller: _tabController,
             ),
           ),
-          floatingActionButton: new FloatingActionButton(
+          floatingActionButton: FloatingActionButton(
             onPressed: () => viewModel.openAddEntryDialog(),
-            tooltip: 'Add new weight entry',
-            child: new Icon(Icons.add),
+            tooltip: 'Add weight entry',
+            child: Icon(Icons.add),
           ),
         );
       },
@@ -134,25 +129,23 @@ class MainPageState extends State<MainPage>
 
   List<Widget> _buildMenuActions(BuildContext context) {
     List<Widget> actions = [
-      new IconButton(
-          icon: new Icon(Icons.settings),
-          onPressed: () => _openSettingsPage(context)),
+      IconButton(icon: Icon(Icons.settings), onPressed: () => _openSettingsPage(context)),
     ];
     bool showProfile = false;
     if (showProfile) {
-      actions.add(new PopupMenuButton<String>(
+      actions.add(PopupMenuButton<String>(
         onSelected: (val) {
           if (val == "Profile") {
-            Navigator.of(context).push(new MaterialPageRoute(
-              builder: (context) => new ProfileScreen(),
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => ProfileScreen(),
             ));
           }
         },
         itemBuilder: (context) {
           return [
-            new PopupMenuItem<String>(
+            PopupMenuItem<String>(
               value: "Profile",
-              child: new Text("Profile"),
+              child: Text("Profile"),
             ),
           ];
         },
@@ -165,14 +158,14 @@ class MainPageState extends State<MainPage>
     _scrollViewController.animateTo(
       0.0,
       duration: const Duration(microseconds: 1),
-      curve: new ElasticInCurve(0.01),
+      curve: ElasticInCurve(0.01),
     );
   }
 
   _openSettingsPage(BuildContext context) async {
-    Navigator.of(context).push(new MaterialPageRoute(
+    Navigator.of(context).push(MaterialPageRoute(
       builder: (BuildContext context) {
-        return new SettingsPage();
+        return SettingsPage();
       },
     ));
   }

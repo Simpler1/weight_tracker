@@ -35,9 +35,7 @@ class DialogViewModel {
 
 class WeightEntryDialog extends StatefulWidget {
   @override
-  State<WeightEntryDialog> createState() {
-    return WeightEntryDialogState();
-  }
+  State<WeightEntryDialog> createState() => WeightEntryDialogState();
 }
 
 class WeightEntryDialogState extends State<WeightEntryDialog> {
@@ -91,6 +89,8 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
     // });
   }
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return StoreConnector<ReduxState, DialogViewModel>(
@@ -114,6 +114,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
             Navigator.of(context).pop();
           },
           onSavePressed: () {
+            _formKey.currentState;
             // store.dispatch(UpdateActiveWeightEntry(
             //     activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
             // store.dispatch(UpdateActiveWeightEntry(
@@ -136,6 +137,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
         return Scaffold(
           appBar: _createAppBar(context, viewModel),
           body: Form(
+            key: _formKey,
             onChanged: () {
               var w = double.tryParse(_weightController.text.replaceAll(',', ''));
               if (viewModel.weightToDisplay != w) {

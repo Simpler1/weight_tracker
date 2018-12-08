@@ -37,9 +37,9 @@ class DataSnapshotMock extends Mock implements DataSnapshot {
 void main() {
   test('reducer UserLoadedAction sets firebase user', () {
     //given
-    ReduxState initialState = new ReduxState();
-    FirebaseUser user = new FirebaseUserMock();
-    UserLoadedAction action = new UserLoadedAction(user);
+    ReduxState initialState = ReduxState();
+    FirebaseUser user = FirebaseUserMock();
+    UserLoadedAction action = UserLoadedAction(user);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -48,9 +48,9 @@ void main() {
 
   test('reducer AddDatabaseReferenceAction sets database reference', () {
     //given
-    ReduxState initialState = new ReduxState();
-    DatabaseReference databaseReference = new DatabaseReferenceMock();
-    AddDatabaseReferenceAction action = new AddDatabaseReferenceAction(databaseReference);
+    ReduxState initialState = ReduxState();
+    DatabaseReference databaseReference = DatabaseReferenceMock();
+    AddDatabaseReferenceAction action = AddDatabaseReferenceAction(databaseReference);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -59,8 +59,8 @@ void main() {
 
   test('reducer AcceptEntryAddedAction sets flag to false', () {
     //given
-    ReduxState initialState = new ReduxState(mainPageState: new MainPageReduxState(hasEntryBeenAdded: true));
-    AcceptEntryAddedAction action = new AcceptEntryAddedAction();
+    ReduxState initialState = ReduxState(mainPageState: MainPageReduxState(hasEntryBeenAdded: true));
+    AcceptEntryAddedAction action = AcceptEntryAddedAction();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -69,8 +69,8 @@ void main() {
 
   test('reducer AcceptEntryAddedAction flag false stays false', () {
     //given
-    ReduxState initialState = new ReduxState();
-    AcceptEntryAddedAction action = new AcceptEntryAddedAction();
+    ReduxState initialState = ReduxState();
+    AcceptEntryAddedAction action = AcceptEntryAddedAction();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -79,9 +79,9 @@ void main() {
 
   test('reducer AcceptEntryRemovalAction sets flag to false', () {
     //given
-    ReduxState initialState = new ReduxState(removedEntryState: new RemovedEntryState(hasEntryBeenRemoved: true));
+    ReduxState initialState = ReduxState(removedEntryState: RemovedEntryState(hasEntryBeenRemoved: true));
     expect(initialState.removedEntryState.hasEntryBeenRemoved, true);
-    AcceptEntryRemovalAction action = new AcceptEntryRemovalAction();
+    AcceptEntryRemovalAction action = AcceptEntryRemovalAction();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -90,8 +90,8 @@ void main() {
 
   test('reducer AcceptEntryRemovalAction flag false stays false', () {
     //given
-    ReduxState initialState = new ReduxState();
-    AcceptEntryRemovalAction action = new AcceptEntryRemovalAction();
+    ReduxState initialState = ReduxState();
+    AcceptEntryRemovalAction action = AcceptEntryRemovalAction();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -100,8 +100,8 @@ void main() {
 
   test('reducer OnUnitChangedAction changes unit', () {
     //given
-    ReduxState initialState = new ReduxState(unit: 'initialUnit');
-    OnUnitChangedAction action = new OnUnitChangedAction("newUnit");
+    ReduxState initialState = ReduxState(unit: 'initialUnit');
+    OnUnitChangedAction action = OnUnitChangedAction("newUnit");
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -110,9 +110,9 @@ void main() {
 
   test('reducer UpdateActiveWeightEntry changes entry', () {
     //given
-    ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
-    UpdateActiveWeightEntry action = new UpdateActiveWeightEntry(updatedEntry);
+    ReduxState initialState = ReduxState();
+    WeightEntry updatedEntry = WeightEntry(DateTime.now(), 60.0, "text", null);
+    UpdateActiveWeightEntry action = UpdateActiveWeightEntry(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -121,9 +121,9 @@ void main() {
 
   test('reducer OpenEditEntryDialog changes entry', () {
     //given
-    ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
-    OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
+    ReduxState initialState = ReduxState();
+    WeightEntry updatedEntry = WeightEntry(DateTime.now(), 60.0, "text", null);
+    OpenEditEntryDialog action = OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -132,9 +132,9 @@ void main() {
 
   test('reducer OpenEditEntryDialog sets EditMode to true', () {
     //given
-    ReduxState initialState = new ReduxState();
-    WeightEntry updatedEntry = new WeightEntry(new DateTime.now(), 60.0, "text", null);
-    OpenEditEntryDialog action = new OpenEditEntryDialog(updatedEntry);
+    ReduxState initialState = ReduxState();
+    WeightEntry updatedEntry = WeightEntry(DateTime.now(), 60.0, "text", null);
+    OpenEditEntryDialog action = OpenEditEntryDialog(updatedEntry);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -143,28 +143,28 @@ void main() {
 
   test('reducer OpenAddEntryDialog sets EditMode to false', () {
     //given
-    ReduxState initialState = new ReduxState(weightEntryDialogState: new WeightEntryDialogReduxState(isEditMode: true));
-    OpenAddEntryDialog action = new OpenAddEntryDialog();
+    ReduxState initialState = ReduxState(weightEntryDialogState: WeightEntryDialogReduxState(isEditMode: true));
+    OpenAddEntryDialog action = OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
     expect(newState.weightEntryDialogState.isEditMode, false);
   });
 
-  test('reducer OpenAddEntryDialog creates new entry with weight 160', () {
+  test('reducer OpenAddEntryDialog creates entry with weight 160', () {
     //given
-    ReduxState initialState = new ReduxState();
-    OpenAddEntryDialog action = new OpenAddEntryDialog();
+    ReduxState initialState = ReduxState();
+    OpenAddEntryDialog action = OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
     expect(newState.weightEntryDialogState.activeEntry?.weight, 160);
   });
 
-  test('reducer OpenAddEntryDialog creates new entry with copied weight from first entry', () {
+  test('reducer OpenAddEntryDialog creates entry with copied weight from first entry', () {
     //given
-    ReduxState initialState = new ReduxState(entries: [new WeightEntry(new DateTime.now(), 60.0, "Text", null)]);
-    OpenAddEntryDialog action = new OpenAddEntryDialog();
+    ReduxState initialState = ReduxState(entries: [WeightEntry(DateTime.now(), 60.0, "Text", null)]);
+    OpenAddEntryDialog action = OpenAddEntryDialog();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -174,9 +174,9 @@ void main() {
 
   test('reducer OnAddedAction adds entry to list', () {
     //given
-    WeightEntry entry = createEntry("key", new DateTime.now(), 60.0, null);
-    ReduxState initialState = new ReduxState();
-    OnAddedAction action = new OnAddedAction(createEventMock(entry));
+    WeightEntry entry = createEntry("key", DateTime.now(), 60.0, null);
+    ReduxState initialState = ReduxState();
+    OnAddedAction action = OnAddedAction(createEventMock(entry));
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -185,9 +185,9 @@ void main() {
 
   test('reducer OnAddedAction sets hasEntryBeenAdded to true', () {
     //given
-    WeightEntry entry = createEntry("key", new DateTime.now(), 60.0, null);
-    ReduxState initialState = new ReduxState();
-    OnAddedAction action = new OnAddedAction(createEventMock(entry));
+    WeightEntry entry = createEntry("key", DateTime.now(), 60.0, null);
+    ReduxState initialState = ReduxState();
+    OnAddedAction action = OnAddedAction(createEventMock(entry));
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -196,9 +196,9 @@ void main() {
 
   test('reducer OnRemovedAction sets hasEntryBeenRemoved to true', () {
     //given
-    WeightEntry entry = createEntry("key", new DateTime.now(), 60.0, null);
-    ReduxState initialState = new ReduxState(entries: [entry]);
-    OnRemovedAction action = new OnRemovedAction(createEventMock(entry));
+    WeightEntry entry = createEntry("key", DateTime.now(), 60.0, null);
+    ReduxState initialState = ReduxState(entries: [entry]);
+    OnRemovedAction action = OnRemovedAction(createEventMock(entry));
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -207,9 +207,9 @@ void main() {
 
   test('reducer OnRemovedAction removes entry from list', () {
     //given
-    WeightEntry entry = createEntry("key", new DateTime.now(), 60.0, null);
-    ReduxState initialState = new ReduxState(entries: [entry]);
-    OnRemovedAction action = new OnRemovedAction(createEventMock(entry));
+    WeightEntry entry = createEntry("key", DateTime.now(), 60.0, null);
+    ReduxState initialState = ReduxState(entries: [entry]);
+    OnRemovedAction action = OnRemovedAction(createEventMock(entry));
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -218,9 +218,9 @@ void main() {
 
   test('reducer OnRemovedAction sets lastRemovedEntry', () {
     //given
-    WeightEntry entry = createEntry("key", new DateTime.now(), 60.0, null);
-    ReduxState initialState = new ReduxState(entries: [entry]);
-    OnRemovedAction action = new OnRemovedAction(createEventMock(entry));
+    WeightEntry entry = createEntry("key", DateTime.now(), 60.0, null);
+    ReduxState initialState = ReduxState(entries: [entry]);
+    OnRemovedAction action = OnRemovedAction(createEventMock(entry));
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -230,9 +230,9 @@ void main() {
   test("ChangeDaysToShowOnChart changes daysToShow", () {
     //given
     int newValue = 10;
-    ReduxState initialState = new ReduxState();
+    ReduxState initialState = ReduxState();
     expect(initialState.progressChartState.daysToShow, isNot(newValue));
-    ChangeDaysToShowOnChart action = new ChangeDaysToShowOnChart(newValue);
+    ChangeDaysToShowOnChart action = ChangeDaysToShowOnChart(newValue);
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -242,8 +242,8 @@ void main() {
   test("SnapShotDaysToShow copies daysToShow to previousDaysToShow", () {
     //given
     ReduxState initialState =
-        new ReduxState(progressChartState: new ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
-    SnapShotDaysToShow action = new SnapShotDaysToShow();
+        ReduxState(progressChartState: ProgressChartState(daysToShow: 10, previousDaysToShow: 20));
+    SnapShotDaysToShow action = SnapShotDaysToShow();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -252,9 +252,9 @@ void main() {
 
   test("EndGestureOnProgressChart updates lastFinishedDateTime", () {
     //given
-    ReduxState initialState = new ReduxState();
+    ReduxState initialState = ReduxState();
     expect(initialState.progressChartState.lastFinishedDateTime, isNull);
-    EndGestureOnProgressChart action = new EndGestureOnProgressChart();
+    EndGestureOnProgressChart action = EndGestureOnProgressChart();
     //when
     ReduxState newState = reduce(initialState, action);
     //then
@@ -263,10 +263,10 @@ void main() {
 
   test("ChangeDaysToShow after endGesture doesnt change daysToShow", () {
     //given
-    ReduxState initialState = new ReduxState(progressChartState: new ProgressChartState(daysToShow: 31));
-    EndGestureOnProgressChart endAction = new EndGestureOnProgressChart();
-    SnapShotDaysToShow startAction = new SnapShotDaysToShow();
-    ChangeDaysToShowOnChart updateAction = new ChangeDaysToShowOnChart(10);
+    ReduxState initialState = ReduxState(progressChartState: ProgressChartState(daysToShow: 31));
+    EndGestureOnProgressChart endAction = EndGestureOnProgressChart();
+    SnapShotDaysToShow startAction = SnapShotDaysToShow();
+    ChangeDaysToShowOnChart updateAction = ChangeDaysToShowOnChart(10);
     //when
     ReduxState state1 = reduce(initialState, endAction);
     ReduxState state2 = reduce(state1, startAction);
@@ -277,10 +277,10 @@ void main() {
 
   test("ChangeDaysToShow after 10ms after endGesture changes daysToShow", () {
     //given
-    ReduxState initialState = new ReduxState(progressChartState: new ProgressChartState(daysToShow: 31));
-    EndGestureOnProgressChart endAction = new EndGestureOnProgressChart();
-    SnapShotDaysToShow startAction = new SnapShotDaysToShow();
-    ChangeDaysToShowOnChart updateAction = new ChangeDaysToShowOnChart(10);
+    ReduxState initialState = ReduxState(progressChartState: ProgressChartState(daysToShow: 31));
+    EndGestureOnProgressChart endAction = EndGestureOnProgressChart();
+    SnapShotDaysToShow startAction = SnapShotDaysToShow();
+    ChangeDaysToShowOnChart updateAction = ChangeDaysToShowOnChart(10);
     //when
     ReduxState state1 = reduce(initialState, endAction);
     ReduxState state2 = reduce(state1, startAction);
@@ -292,14 +292,14 @@ void main() {
 }
 
 WeightEntry createEntry(String key, DateTime dateTime, double weight, String note) {
-  WeightEntry entry = new WeightEntry(dateTime, weight, note, null);
+  WeightEntry entry = WeightEntry(dateTime, weight, note, null);
   entry.key = key;
   return entry;
 }
 
 Event createEventMock(WeightEntry weightEntry) {
-  EventMock eventMock = new EventMock();
-  DataSnapshotMock snapshotMock = new DataSnapshotMock(weightEntry);
+  EventMock eventMock = EventMock();
+  DataSnapshotMock snapshotMock = DataSnapshotMock(weightEntry);
   when(eventMock.snapshot).thenReturn(snapshotMock);
   return eventMock;
 }
