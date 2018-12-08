@@ -29,9 +29,7 @@ class MainPage extends StatefulWidget {
   final String title;
 
   @override
-  State<MainPage> createState() {
-    return MainPageState();
-  }
+  MainPageState createState() => MainPageState();
 }
 
 class MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {

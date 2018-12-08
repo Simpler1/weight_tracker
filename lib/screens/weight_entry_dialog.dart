@@ -35,7 +35,7 @@ class DialogViewModel {
 
 class WeightEntryDialog extends StatefulWidget {
   @override
-  State<WeightEntryDialog> createState() => WeightEntryDialogState();
+  WeightEntryDialogState createState() => WeightEntryDialogState();
 }
 
 class WeightEntryDialogState extends State<WeightEntryDialog> {
