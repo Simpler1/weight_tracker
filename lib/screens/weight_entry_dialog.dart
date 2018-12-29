@@ -115,10 +115,13 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
           },
           onSavePressed: () {
             _formKey.currentState;
-            // store.dispatch(UpdateActiveWeightEntry(
-            //     activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
-            // store.dispatch(UpdateActiveWeightEntry(
-            //     activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', ''))));
+
+            // The next two dispatch statements are only to cover the case where the user has changed either of these
+            // values and then immediately presses Save while focus is still in the edited field.
+            store.dispatch(UpdateActiveWeightEntry(
+                activeEntry..weight = double.tryParse(_weightController.text.replaceAll(',', ''))));
+            store.dispatch(UpdateActiveWeightEntry(
+                activeEntry..percentBodyFat = double.tryParse(_fatController.text.replaceAll(',', ''))));
 
             if (store.state.weightEntryDialogState.isEditMode) {
               store.dispatch(EditEntryAction(activeEntry));
