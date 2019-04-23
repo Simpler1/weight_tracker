@@ -137,10 +137,12 @@ Future<FirebaseUser> _handleSignIn() async {
   GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   if (googleUser == null) throw ('User not logged in');
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-  final FirebaseUser user = await _auth.signInWithGoogle(
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
   );
+
+  final FirebaseUser user = await _auth.signInWithCredential(credential);
   print("Signed in as " + user.displayName);
   return user;
 }
