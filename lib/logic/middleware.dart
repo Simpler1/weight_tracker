@@ -142,7 +142,7 @@ Future<FirebaseUser> _handleSignIn() async {
     idToken: googleAuth.idToken,
   );
 
-  final FirebaseUser user = await _auth.signInWithCredential(credential);
+  final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
   print("Signed in as " + user.displayName);
   return user;
 }
