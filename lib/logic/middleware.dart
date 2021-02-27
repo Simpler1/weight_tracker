@@ -114,20 +114,20 @@ _handleAddEntryAction(Store<ReduxState> store, AddEntryAction action) {
 _handleInitAction(Store<ReduxState> store) {
   _loadUnit().then((unit) => store.dispatch(OnUnitChangedAction(unit)));
   if (store.state.firebaseState.firebaseUser == null) {
-    FirebaseAuth.instance.currentUser().then((user) {
-      if (user != null) {
-        store.dispatch(UserLoadedAction(user));
-      } else {
-        _handleSignIn().then((FirebaseUser user) => store.dispatch(UserLoadedAction(user))).catchError((e) {
-          print('--- Exiting.  Login Error: $e');
-          exit(0);
-        });
-      }
-    });
+    User user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      store.dispatch(UserLoadedAction(user));
+    } else {
+      _handleSignIn().then((User user) => store.dispatch(UserLoadedAction(user))).catchError((e) {
+        print('--- Exiting.  Login Error: $e');
+        exit(0);
+      });
+    }
   }
+  ;
 }
 
-Future<FirebaseUser> _handleSignIn() async {
+Future<User> _handleSignIn() async {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
@@ -137,12 +137,12 @@ Future<FirebaseUser> _handleSignIn() async {
   GoogleSignInAccount googleUser = await _googleSignIn.signIn();
   if (googleUser == null) throw ('User not logged in');
   final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
+  final AuthCredential credential = GoogleAuthProvider.credential(
     accessToken: googleAuth.accessToken,
     idToken: googleAuth.idToken,
   );
 
-  final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+  final User user = (await _auth.signInWithCredential(credential)).user;
   print("Signed in as " + user.displayName);
   return user;
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux/redux.dart';
 import 'package:weight_tracker/logic/actions.dart';
@@ -7,7 +8,11 @@ import 'package:weight_tracker/logic/reducer.dart';
 import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/screens/main_page.dart';
 
-void main() => runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   final Store<ReduxState> store = Store<ReduxState>(reduce,

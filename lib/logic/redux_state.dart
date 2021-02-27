@@ -97,13 +97,13 @@ class WeightEntryDialogReduxState {
 
 @immutable
 class FirebaseState {
-  final FirebaseUser firebaseUser;
+  final User firebaseUser;
   final DatabaseReference mainReference;
 
   const FirebaseState({this.firebaseUser, this.mainReference});
 
   FirebaseState copyWith({
-    FirebaseUser firebaseUser,
+    User firebaseUser,
     DatabaseReference mainReference,
   }) {
     return FirebaseState(

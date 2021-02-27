@@ -9,7 +9,7 @@ import 'package:weight_tracker/logic/reducer.dart';
 import 'package:weight_tracker/logic/redux_state.dart';
 import 'package:weight_tracker/model/weight_entry.dart';
 
-class FirebaseUserMock extends Mock implements FirebaseUser {}
+class UserMock extends Mock implements User {}
 
 class DatabaseReferenceMock extends Mock implements DatabaseReference {}
 
@@ -38,7 +38,7 @@ void main() {
   test('reducer UserLoadedAction sets firebase user', () {
     //given
     ReduxState initialState = ReduxState();
-    FirebaseUser user = FirebaseUserMock();
+    User user = UserMock();
     UserLoadedAction action = UserLoadedAction(user);
     //when
     ReduxState newState = reduce(initialState, action);

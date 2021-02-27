@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
       );
     } else {
       return CircleAvatar(
-        backgroundImage: NetworkImage(vm.user.photoUrl),
+        backgroundImage: NetworkImage(vm.user.photoURL),
         radius: 36.0,
       );
     }
@@ -47,7 +47,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _ViewModel {
-  final FirebaseUser user;
+  final User user;
 
   _ViewModel({@required this.user});
 }

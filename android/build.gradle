@@ -6,9 +6,9 @@ buildscript {
 
     dependencies {
         // Example existing classpath
-        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'com.android.tools.build:gradle:4.0.0'
         // Add the google services classpath
-        classpath 'com.google.gms:google-services:4.2.0' // google-services plugin
+        classpath 'com.google.gms:google-services:4.3.3' // google-services plugin
     }
 }
 
@@ -29,6 +29,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+wrapper {
+    gradleVersion = '4.4'
 }
