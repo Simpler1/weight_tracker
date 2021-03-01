@@ -56,7 +56,7 @@ class HistoryPage extends StatelessWidget {
       builder: (context, viewModel) {
         if (viewModel.hasEntryBeenRemoved) {
           Future<Null>.delayed(Duration.zero, () {
-            Scaffold.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
               content: Text("Entry deleted."),
               action: SnackBarAction(
                 label: "UNDO",

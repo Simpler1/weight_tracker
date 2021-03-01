@@ -263,12 +263,12 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
   }
 
   Widget _createAppBar(BuildContext context, DialogViewModel viewModel) {
-    TextStyle actionStyle = Theme.of(context).textTheme.subhead.copyWith(color: Colors.white);
+    TextStyle actionStyle = Theme.of(context).textTheme.subtitle1.copyWith(color: Colors.white);
     Text title = viewModel.isEditMode ? const Text("Edit entry") : const Text("New entry");
     List<Widget> actions = [];
     if (viewModel.isEditMode) {
       actions.add(
-        FlatButton(
+        TextButton(
           onPressed: viewModel.onDeletePressed,
           child: Text(
             'DELETE',
@@ -277,7 +277,7 @@ class WeightEntryDialogState extends State<WeightEntryDialog> {
         ),
       );
     }
-    actions.add(FlatButton(
+    actions.add(TextButton(
       onPressed: viewModel.onSavePressed,
       child: Text(
         'SAVE',

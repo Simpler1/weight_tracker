@@ -124,7 +124,6 @@ _handleInitAction(Store<ReduxState> store) {
       });
     }
   }
-  ;
 }
 
 Future<User> _handleSignIn() async {

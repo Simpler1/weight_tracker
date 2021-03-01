@@ -33,7 +33,7 @@ class StatisticsPage extends StatelessWidget {
     return StoreConnector<ReduxState, _StatisticsPageViewModel>(
       converter: (store) {
         String unit = store.state.unit;
-        List<WeightEntry> entries = List();
+        List<WeightEntry> entries = [];
         store.state.entries.forEach((entry) {
           if (unit == "lbs") {
             entries.add(entry);
@@ -161,7 +161,7 @@ class _StatisticCard extends StatelessWidget {
                 Text(
                   numberSymbol + value.toStringAsFixed(1),
                   textScaleFactor: textSizeFactor,
-                  style: Theme.of(context).textTheme.display2.copyWith(color: numberColor),
+                  style: Theme.of(context).textTheme.headline3.copyWith(color: numberColor),
                 ),
                 Padding(padding: EdgeInsets.only(left: 5.0), child: Text(unit)),
               ],

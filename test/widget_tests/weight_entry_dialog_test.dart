@@ -38,24 +38,24 @@ void main() {
 
   testWidgets('WeightEntryDialog has "SAVE" button when edit', (WidgetTester tester) async {
     await pumpSettingWidget(Store<ReduxState>(reduce, initialState: defaultState), tester);
-    expect(find.widgetWithText(FlatButton, 'SAVE'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'SAVE'), findsOneWidget);
   });
 
   testWidgets('WeightEntryDialog has "SAVE" button when not edit', (WidgetTester tester) async {
     await pumpSettingWidget(
         Store<ReduxState>(reduce, initialState: defaultState.copyWith(weightEntryDialogState: dialogAddState)), tester);
-    expect(find.widgetWithText(FlatButton, 'SAVE'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'SAVE'), findsOneWidget);
   });
 
   testWidgets('WeightEntryDialog has "DELETE" button when edit', (WidgetTester tester) async {
     await pumpSettingWidget(Store<ReduxState>(reduce, initialState: defaultState), tester);
-    expect(find.widgetWithText(FlatButton, 'DELETE'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'DELETE'), findsOneWidget);
   });
 
   testWidgets('WeightEntryDialog has not "DELETE" button when not edit', (WidgetTester tester) async {
     await pumpSettingWidget(
         Store<ReduxState>(reduce, initialState: defaultState.copyWith(weightEntryDialogState: dialogAddState)), tester);
-    expect(find.widgetWithText(FlatButton, 'DELETE'), findsNothing);
+    expect(find.widgetWithText(TextButton, 'DELETE'), findsNothing);
   });
 
   testWidgets('WeightEntryDialog displays weight in lbs', (WidgetTester tester) async {
