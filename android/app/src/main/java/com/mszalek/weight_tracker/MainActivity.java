@@ -2,19 +2,20 @@ package com.routineapps.weight_tracker;
 
 import android.content.Intent;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import com.google.android.gms.actions.NoteIntents;
-import io.flutter.app.FlutterActivity;
-import io.flutter.plugin.common.MethodCall;
+import io.flutter.embedding.android.FlutterActivity;
+import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugins.GeneratedPluginRegistrant;
 
 public class MainActivity extends FlutterActivity {
+    private static final String CHANNEL = "app.channel.shared.data";
     String savedNote;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        GeneratedPluginRegistrant.registerWith(this);
+    public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+        GeneratedPluginRegistrant.registerWith(flutterEngine);
         Intent intent = getIntent();
         String action = intent.getAction();
         String type = intent.getType();
@@ -25,16 +26,15 @@ public class MainActivity extends FlutterActivity {
             }
         }
 
-        new MethodChannel(getFlutterView(), "app.channel.shared.data")
-                .setMethodCallHandler(new MethodChannel.MethodCallHandler() {
-                    @Override
-                    public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-                        if (methodCall.method.contentEquals("getSavedNote")) {
-                            result.success(savedNote);
-                            savedNote = null;
-                        }
+        new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), CHANNEL)
+            .setMethodCallHandler(
+                (call, result) -> {
+                    if (call.method.contentEquals("getSavedNote")) {
+                        result.success(savedNote);
+                        savedNote = null;
                     }
-                });
+                }
+            );
     }
 
 
@@ -42,3 +42,4 @@ public class MainActivity extends FlutterActivity {
         savedNote = intent.getStringExtra(Intent.EXTRA_TEXT);
     }
 }
+        

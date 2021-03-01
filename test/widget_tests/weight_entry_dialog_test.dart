@@ -78,7 +78,7 @@ void main() {
     await pumpSettingWidget(Store<ReduxState>(reduce, initialState: defaultState), tester);
     await tester.tap(find.byKey(Key('CalendarItem')));
     await tester.pump();
-    expect(find.byType(MonthPicker), findsOneWidget);
+    expect(find.byType(CalendarDatePicker), findsOneWidget);
   });
 
   //TimePicker is private

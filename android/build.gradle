@@ -30,5 +30,5 @@ task clean(type: Delete) {
 }
 
 wrapper {
-    gradleVersion = '4.4'
+    gradleVersion = '6.1.1'
 }
